@@ -90,18 +90,33 @@ usersRouter.post('/register', async (req, res, next) => {
   
 // GET /api/users/me
 usersRouter.get('/me', async (req, res, next) => {
-    const {username} = req.user;
-    console.log(req.user)
+    const {username} = req.body;
+    console.log(username)
     try {
-    const user = await getUserByUsername({username})
+    const user = await getUserByUsername(username)
     console.log('/me', user)
    res.send(user)
     } catch ({ name, message }) {
       next({ name, message })
     } 
     }
-// }
+
 );
+
+// Get /api/users/:username/orders
+usersRouter.get('/:username/orders', async (req, res, next) => {
+    const {username} = req.params.username;
+    console.log(username)
+    try {
+    const user = await getUserByUsername(username)
+    console.log('/me', user)
+   res.send(user)
+    } catch ({ name, message }) {
+      next({ name, message })
+    } 
+    }
+
+)
 
 
 
