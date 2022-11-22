@@ -125,5 +125,6 @@ module.exports = {
     destroyProduct,
     getAllProducts,
     getProdcutByCatagory,
-    getProductById
+    getProductById,
+    addProductToCart
 }
