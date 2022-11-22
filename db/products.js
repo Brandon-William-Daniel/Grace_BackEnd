@@ -8,6 +8,7 @@
 //         addProductToCart
 //         buySingleProductNow
 
+const { ClientRequest } = require('http')
 const client = require('./client')
 
 async function createProduct({title, description, price, invQty, catagoryId, active}){
@@ -92,14 +93,36 @@ async function updateProduct({productId, title, description, price, invQty, cata
     }
 }
 
-async function addProductToCart(productId){
+async function addProductToCart({}){
     try {
-        
+        const result = await client.query(`
+            INSERT INTO "orderLine"
+            VALUES ()
+
+
+        `)
     } catch (error) {
         console.error(error.detail)
     }
 }
 
+async function buySingleProductNow({productId, quanity, price}){
+    try {
+        const result = await client.query(`
+            INSERT INTO "orderDetails"
+            VALUES ($1, $2)
+            WHERE 'productId'=${productId}
+        `, [quanity, price])
+    } catch (error) {
+        console.error(error.deatil)
+    }
+}
 module.exports = {
-    createProduct
+    createProduct,
+    buySingleProductNow,
+    updateProduct,
+    destroyProduct,
+    getAllProducts,
+    getProdcutByCatagory,
+    getProductById
 }
