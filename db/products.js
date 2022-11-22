@@ -93,14 +93,15 @@ async function updateProduct({productId, title, description, price, invQty, cata
     }
 }
 
-async function addProductToCart({}){
+async function addProductToCart({productId, userId, shipTo}){
     try {
         const result = await client.query(`
             INSERT INTO "orderLine"
-            VALUES ()
-
-
-        `)
+            VALUES ($1)
+            WHERE "prodcutId"=${productId}
+            AND
+            WHERE "userId"=${userId}
+        `, [shipTo])
     } catch (error) {
         console.error(error.detail)
     }
@@ -111,7 +112,7 @@ async function buySingleProductNow({productId, quanity, price}){
         const result = await client.query(`
             INSERT INTO "orderDetails"
             VALUES ($1, $2)
-            WHERE 'productId'=${productId}
+            WHERE "productId"=${productId}
         `, [quanity, price])
     } catch (error) {
         console.error(error.deatil)
