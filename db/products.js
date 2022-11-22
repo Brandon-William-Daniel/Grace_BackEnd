@@ -75,7 +75,7 @@ async function destroyProduct(productId){
 }
 
 
-async function updateProduct({productId, title, description, price, invQty, catagoryId}){
+async function updateProduct({id, title, description, price, invQty, catagoryId}){
     try {
         const result = await client.query(`
             UPDATE products
@@ -84,9 +84,10 @@ async function updateProduct({productId, title, description, price, invQty, cata
                 price=$3
                 invQty=$4
                 "catagoryId"=$5
-            WHERE id=${productId}
+            WHERE id=${id}
             RETURNING *;
         `, [title, description, price, invQty, catagoryId])
+        return result
     } catch (error) {
         console.error(error.detail)
     }
