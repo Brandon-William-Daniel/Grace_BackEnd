@@ -4,7 +4,7 @@
 //         getProductByCatagory //done
 //         getAllProducts //done
 //         destroyProduct // done
-//         updateProduct
+//         updateProduct //done
 //         addProductToCart
 //         buySingleProductNow
 
@@ -29,7 +29,7 @@ async function getProductById(id){
         const result = await client.query(`
             SELECT title, description, price
             FROM products
-            WHERE id=${id}
+            WHERE id=${id};
         `)
         return result
     } catch (error) {
@@ -43,7 +43,7 @@ async function getProdcutByCatagory(catagory){
         const result = await client.query(`
             SELECT title, description, price
             FROM products
-            WHERE "catName"=${catagory}
+            WHERE "catName"=${catagory};
         `)
         return result
     } catch (error) {
@@ -55,7 +55,7 @@ async function getAllProducts(){
     try {
         const result = await client.query(`
             SELECT *
-            from prodcuts
+            from products;
         `)
         return result
     } catch (error) {
@@ -67,7 +67,7 @@ async function destroyProduct(productId){
     try {
         const result = await client.query(`
             DELETE FROM products
-            WHERE id=${productId}
+            WHERE id=${productId};
         `)
     } catch (error) {
         console.error(error.detail)
@@ -75,11 +75,26 @@ async function destroyProduct(productId){
 }
 
 
-async function updateProduct(productId){
+async function updateProduct({productId, title, description, price, invQty, catagoryId}){
     try {
         const result = await client.query(`
+            UPDATE products
+            SET title=$1
+                description=$2
+                price=$3
+                invQty=$4
+                "catagoryId"=$5
+            WHERE id=${productId}
+            RETURNING *;
+        `, [title, description, price, invQty, catagoryId])
+    } catch (error) {
+        console.error(error.detail)
+    }
+}
+
+async function addProductToCart(productId){
+    try {
         
-        `)
     } catch (error) {
         console.error(error.detail)
     }
