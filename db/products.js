@@ -8,7 +8,6 @@
 //         addProductToCart
 //         buySingleProductNow
 
-const { ClientRequest } = require('http')
 const client = require('./client')
 
 async function createProduct({title, description, price, invQty, catagoryId, active}){
