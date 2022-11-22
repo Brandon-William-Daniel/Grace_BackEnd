@@ -3,7 +3,7 @@
 //         getProductById //done
 //         getProductByCatagory //done
 //         getAllProducts //done
-//         destroyProduct
+//         destroyProduct // done
 //         updateProduct
 //         addProductToCart
 //         buySingleProductNow
@@ -74,6 +74,16 @@ async function destroyProduct(productId){
     }
 }
 
+
+async function updateProduct(productId){
+    try {
+        const result = await client.query(`
+        
+        `)
+    } catch (error) {
+        console.error(error.detail)
+    }
+}
 
 module.exports = {
     createProduct
