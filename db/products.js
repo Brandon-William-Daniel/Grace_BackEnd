@@ -8,32 +8,47 @@
 //         addProductToCart
 //         buySingleProductNow
 
-const client = require('./client')
+const client = require("./client");
 
-async function createProduct({title, description, price, invQty, catagoryId, active}){
+async function createProduct({title, description, price, invQty, photo,catagoryId}){
     try {
-        const result = await client.query(`
-            INSERT INTO products (title, description, price, invQty, "catagoryId", active)
+        const {rows: [products]} = await client.query(`
+            INSERT INTO products (title, description, price, invQty, photo, "catagoryId")
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *;
-        `, [title, description, price, invQty, catagoryId, active])
-        return result
+        `, [title, description, price, invQty, photo, catagoryId])
+        // console.log(products)
+        return products
     } catch (error) {
-        console.error(error.detail)
+        console.error(error)
+    }
+}
+
+async function createCatagory({name}){
+    try {
+        const {rows:[cat]} = await client.query(`
+            INSERT INTO catagory ("catName")
+            VALUES ($1)
+            RETURNING *;
+        `, [name])
+        console.log(cat)
+        return cat
+    } catch (error) {
+        console.error(error)
     }
 }
 
 
 async function getProductById(id){
     try {
-        const {rows: [product]} = await client.query(`
+        const {rows: [products]} = await client.query(`
             SELECT title, description, price
             FROM products
             WHERE id=${id};
         `)
-        return product
+        return result
     } catch (error) {
-        console.error(error.detail)
+        console.error(error)
     }
 }
 
@@ -124,5 +139,6 @@ module.exports = {
     getAllProducts,
     getProductByCatagory,
     getProductById,
-    addProductToCart
+    addProductToCart,
+    createCatagory
 }

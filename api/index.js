@@ -48,16 +48,16 @@ const usersRouter = require('./users');
 router.use('/users', usersRouter);
 
 // ROUTER: /api/products
-// const productsRouter = require('./products');
-// router.use('/products', productsRouter);
+const productsRouter = require('./products');
+router.use('/products', productsRouter);
 
 // // ROUTER: /api/orders
 // const ordersRouter = require('./orders');
 // router.use('/orders', ordersRouter);
 
-// // ROUTER: /api/routine_activities
-// const reviewsRouter = require('./reviews');
-// router.use('/reviews', reviewsRouter);
+// ROUTER: /api/routine_activities
+const reviewRouter = require('./reviews');
+router.use('/reviews', reviewRouter);
 
 router.use((error, req, res, next) => {
     res.send({

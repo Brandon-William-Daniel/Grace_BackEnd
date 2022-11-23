@@ -1,5 +1,11 @@
 const client = require("./client")
+
+
+
 const {createUser, getAllUsers} = require('./users')
+const {createProduct, getProductById, createCatagory} = require('./products')
+const {list} = require('./seedProducts')
+
 const {createCatagory} = require('./catagories')
 const {createProduct, getProductById, getProductByCatagory, getAllProducts, destroyProduct, updateProduct, addProductToCart, buySingleProductNow} = require('./products')
 
@@ -46,8 +52,9 @@ async function createTables() {
         id SERIAL PRIMARY KEY,
         title VARCHAR(255),
         description TEXT,
-        price NUMERIC NOT NULL,
+        price MONEY NOT NULL,
         invQty INTEGER NOT NULL,
+        photo TEXT,
         "catagoryId" INTEGER REFERENCES catagory(id),
         active BOOLEAN DEFAULT true
       );
@@ -70,7 +77,7 @@ async function createTables() {
         "orderId" INTEGER REFERENCES "orderLine"(id),
         "productId" INTEGER REFERENCES products(id),
         quantity INTEGER,
-        price INTEGER
+        price MONEY
       );
       `)
       console.log("Tables Created")
@@ -141,45 +148,49 @@ async function createInitialCatagory() {
     // console.log("activities created:")
     // console.log(activities)
 
-    console.log("Finished creating activities!")
+    console.log("Finished creating Catagories!")
   } catch (error) {
-    console.error("Error creating activities!")
+    console.error("Error creating Catagories!")
     throw error
   }
 }
 
 async function createInitialProducts() {
   console.log("starting to create products...")
-
+// console.log(list())
   const productsToCreate = [
     {
-        title: "Tire Tread",
-        description: 'Replace that tread that is slowly melting away',
-        price: "35.69",
-        invQty: "500",
-        catagoryId: 3
-    },
-    {
-        title: "Blinker Fluid",
-        description: 'Rehydrate with this special fluid',
-        price: "87.00",
-        invQty: "12",
-        catagoryId: 1
-    },
-    {
-        title: "Shower Beer Holder",
-        description: 'Nice rubber holder to hold your favorite shower beverage',
-        price: "5",
-        invQty: "41",
-        catagoryId: 2
-    },
-    {
-        title: "Bigfoot Air Freshner",
-        description: 'For when you have that new car smell that needs to smell like a locker room.',
-        price: "23",
-        invQty: "1",
-        catagoryId: 1
-    },
+      title: "Tire Tread",
+      description: 'Replace that tread that is slowly melting away',
+      price: "35.69",
+      invQty: "500",
+      photo: 'https://static.grainger.com/rp/s/is/image/Grainger/448K72_AS01?hei=536&wid=536&$adapimg$=',
+      catagoryId: 3
+  },
+  {
+      title: "Blinker Fluid",
+      description: 'Rehydrate with this special fluid',
+      price: "87.00",
+      invQty: "12",
+      photo: 'https://i5.walmartimages.com/asr/0356b49b-c267-47d6-ae95-90ffd5f04dd3.04bd5f00a1b61facc1275b771e11b4e7.jpeg?odnHeight=612&odnWidth=612&odnBg=FFFFFF',
+      catagoryId: 1
+  },
+  {
+      title: "Shower Beer Holder",
+      description: 'Nice rubber holder to hold your favorite shower beverage',
+      price: "5",
+      invQty: "41",
+      photo: 'https://flipfit-cdn.akamaized.net/flipfit-prod-tmp/items/1660475893183-090335380GRYOS.webp',
+      catagoryId: 2
+  },
+  {
+      title: "Bigfoot Air Freshner",
+      description: 'For when you have that new car smell that needs to smell like a locker room.',
+      price: "23",
+      invQty: "1",
+      photo: 'https://i.etsystatic.com/16245580/r/il/483c9c/3161775434/il_794xN.3161775434_qj1h.jpg',
+      catagoryId: 1
+  },
   ]
   const products = await Promise.all(
     productsToCreate.map((products) => createProduct(products))
@@ -233,14 +244,16 @@ async function rebuildDB() {
     client.connect()
     await dropTables()
     await createTables()
-    // await createInitialUsers()
-    // await createInitialCatagory()
-    // await createInitialProducts()
+
+    await createInitialUsers()
+
+    await createInitialCatagory()
+    await createInitialProducts()
     // await createInitialReviews()
     
     
     console.log('testing area')
-    // console.log(await getAllUsers())
+    // console.log(await getProductById(1))
     
 console.log('Rebuild Complete')
   } catch (error) {
