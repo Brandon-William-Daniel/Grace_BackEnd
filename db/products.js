@@ -31,7 +31,7 @@ async function createCatagory({name}){
             VALUES ($1)
             RETURNING *;
         `, [name])
-        console.log(cat)
+      
         return cat
     } catch (error) {
         console.error(error)
@@ -72,9 +72,9 @@ async function getAllProducts(){
             SELECT title, description, price
             from products;
         `)
-        return rows
+        return results
     } catch (error) {
-        console.error(error.detail)
+        console.error(error)
     }
 }
 
