@@ -13,6 +13,7 @@ const {getAllProducts, createProduct, destroyProduct, updateProduct} = require('
 //     next();
 // })
 
+// GET /api/products/
 productsRouter.get('/', async (req, res, next) => {
     try {
         const products = await getAllProducts();
