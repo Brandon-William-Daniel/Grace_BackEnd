@@ -6,9 +6,12 @@
 
 const express = require('express')
 const reviewRouter = express.Router();
-const {getAllReviews, createReview, deleteReview, updateReview} = require('../db/reviews')
+const {getAllReviews, 
+    createReview, 
+    deleteReview, 
+    updateReview} = require('../db/reviews')
 
-const {} = require('..db');
+const {requireUser} = require('./utils');
 
 reviewRouter.get('/', async (req, res, next) => {
     try {
@@ -24,9 +27,12 @@ reviewRouter.get('/', async (req, res, next) => {
 
 reviewRouter.post('/:productId/newreview', requireUser, async (req, res, next) => {
     const {title, review} = req.body
+    console.log('this is the params', req.params.productId)
     const reviewData = {}
 
     try {
+        reviewData.productId = req.params.productId
+        reviewData.userId = req.user.id
         reviewData.title = title
         reviewData.review = review
         const createdReview = await createReview(reviewData)
@@ -57,9 +63,9 @@ reviewRouter.delete('/deletereview/:productid/userid', requireUser, async (req, 
     }
 })
 
-reviewRouter.patch('/updatereview/:productid/userid', requireUser, async (req, res, next) => {
+reviewRouter.patch('/updateReview/:productid/:userid', requireUser, async (req, res, next) => {
     const {productId, userId} = req.params
-    const {title, review} = req.body
+    const {title, description} = req.body
 
     try {
         const updatedReview = await updateReview({productId, userId})
@@ -70,3 +76,5 @@ reviewRouter.patch('/updatereview/:productid/userid', requireUser, async (req, r
         console.log(error)
     }
 })
+
+module.exports = reviewRouter;

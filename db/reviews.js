@@ -60,6 +60,7 @@ async function deleteReview(productId, userId) {
         DELETE FROM reviews
         WHERE "productId"=${productId} and "userId"=${userId};
         `)
+        console.log('deleted')
      } catch (error) {
         console.log(error)
      }
