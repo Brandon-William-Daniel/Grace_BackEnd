@@ -46,22 +46,21 @@ async function getProductById(id){
             FROM products
             WHERE id=${id};
         `)
-      
-        return products
+        return result
     } catch (error) {
         console.error(error)
     }
 }
 
 
-async function getProdcutByCatagory(catagory){
+async function getProductByCatagory(catagoryId){
     try {
-        const result = await client.query(`
+        const {rows} = await client.query(`
             SELECT title, description, price
             FROM products
-            WHERE "catName"=${catagory};
+            WHERE "catagoryId"=${catagoryId};
         `)
-        return result
+        return rows
     } catch (error) {
         console.error(error.detail)
     }
@@ -69,11 +68,13 @@ async function getProdcutByCatagory(catagory){
 
 async function getAllProducts(){
     try {
+
         const {rows: [results]} = await client.query(`
             SELECT *
             from products;
         `)
         return results
+
     } catch (error) {
         console.error(error)
     }
@@ -91,44 +92,45 @@ async function destroyProduct(productId){
 }
 
 
-async function updateProduct({productId, title, description, price, invQty, catagoryId}){
+async function updateProduct({id, title, description, price, invQty, catagoryId}){
     try {
         const result = await client.query(`
             UPDATE products
-            SET title=$1
-                description=$2
-                price=$3
-                invQty=$4
+            SET title=$1,
+                description=$2,
+                price=$3,
+                invQty=$4,
                 "catagoryId"=$5
-            WHERE id=${productId}
+            WHERE id=${id}
             RETURNING *;
         `, [title, description, price, invQty, catagoryId])
+        return result
     } catch (error) {
         console.error(error.detail)
     }
 }
 
-async function addProductToCart({productId, userId, shipTo}){
+async function addProductToCart({productId, userId, total, current, shipTo}){
+    //
     try {
-        const result = await client.query(`
-            INSERT INTO "orderLine"
-            VALUES ($1)
-            WHERE "prodcutId"=${productId}
-            AND
-            WHERE "userId"=${userId}
-        `, [shipTo])
+        const {rows} = await client.query(`
+           INSERT INTO "orderLine" ("productId", "userId", total, current, "shipTo")
+           VALUES ($1, $2, $3, $4, $5)
+           RETURNING *;
+       `, [productId, userId, total, current, shipTo])
+        return rows
     } catch (error) {
         console.error(error.detail)
     }
 }
 
-async function buySingleProductNow({productId, quanity, price}){
+async function buySingleProductNow({orderId, productId, quantity, price}){
     try {
         const result = await client.query(`
-            INSERT INTO "orderDetails"
-            VALUES ($1, $2)
-            WHERE "productId"=${productId}
-        `, [quanity, price])
+           INSERT INTO "orderDetails" ( "orderId", "productId", quantity, price)
+           VALUES ($1, $2, $3, $4)
+           RETURNING *
+        `, [orderId, productId, quantity, price])
     } catch (error) {
         console.error(error.deatil)
     }
@@ -139,7 +141,7 @@ module.exports = {
     updateProduct,
     destroyProduct,
     getAllProducts,
-    getProdcutByCatagory,
+    getProductByCatagory,
     getProductById,
     addProductToCart,
     createCatagory
