@@ -69,13 +69,13 @@ async function getProdcutByCatagory(catagory){
 
 async function getAllProducts(){
     try {
-        const result = await client.query(`
+        const {rows: [results]} = await client.query(`
             SELECT *
             from products;
         `)
-        return result
+        return results
     } catch (error) {
-        console.error(error.detail)
+        console.error(error)
     }
 }
 
