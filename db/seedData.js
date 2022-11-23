@@ -160,7 +160,7 @@ async function createInitialCatagory() {
 
 async function createInitialProducts() {
   console.log("starting to create products...")
-console.log(list())
+// console.log(list())
   const productsToCreate = list()
 
   const products = await Promise.all(
@@ -226,7 +226,7 @@ async function rebuildDB() {
     
 
     console.log('testing area')
-    console.log(await getAllProducts())
+    // console.log(await getAllProducts())
     
 console.log('Rebuild Complete')
   } catch (error) {
