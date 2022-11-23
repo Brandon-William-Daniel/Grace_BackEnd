@@ -8,10 +8,12 @@ const express = require('express');
 const productsRouter = express.Router();
 const {getAllProducts, createProduct, destroyProduct, updateProduct} = require('../db/products')
 
+
 // productsRouter.use((req, res, next) => {
 //     console.log('a request is being made to products')
 //     next();
 // })
+
 
 // GET /api/products/
 productsRouter.get('/', async (req, res, next) => {
@@ -25,7 +27,7 @@ productsRouter.get('/', async (req, res, next) => {
     }
 })
 
-productsRouter.post('/newproduct', async (req, res, next) => {
+productsRouter.post('/newproduct', requireUser, async (req, res, next) => {
     const {title, description, price, invQty, catagoryId} = req.body
     const productData = {}
     try {
@@ -48,7 +50,7 @@ productsRouter.post('/newproduct', async (req, res, next) => {
     }
 })
 
-productsRouter.delete('/deleteproduct/:productid', async (req, res) => {
+productsRouter.delete('/deleteproduct/:productid', requireUser, async (req, res) => {
     const {productid} = req.params
     try {
         const deleteproduct = await destroyProduct(productid)
@@ -64,7 +66,7 @@ productsRouter.delete('/deleteproduct/:productid', async (req, res) => {
     }
 })
 
-productsRouter.patch('/updateproduct/:productid', async (req, res) => {
+productsRouter.patch('/updateproduct/:productid', requireUser, async (req, res) => {
     const {productid} = req.params
     const {title, description, price, invQty, catagoryId} = req.body
     try {

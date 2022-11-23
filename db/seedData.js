@@ -3,9 +3,14 @@ const client = require("./client")
 
 
 const {createUser, getAllUsers} = require('./users')
-const {createProduct, getProductById, createCatagory} = require('./products')
+const {createProduct, getProductById} = require('./products')
 const {list} = require('./seedProducts')
+
+const {createCatagory} = require('./catagories')
+
+
 const {createReview} = require('./reviews')
+
 
 
 async function dropTables() {
@@ -135,10 +140,10 @@ async function createInitialCatagory() {
     console.log("Starting to create catagories...")
 
     const catagoriesToCreate = [
-      { name: "For Men"}, 
-      { name: "For Women"},
-      { name: "Outdoor"},
-      { name: "Cheap"},
+      { catName: "For Men"}, 
+      { catName: "For Women"},
+      { catName: "Outdoor"},
+      { catName: "Cheap"},
       
     ]
     const catagories = await Promise.all(catagoriesToCreate.map(createCatagory))
@@ -204,11 +209,13 @@ async function createInitialReviews() {
   console.log("Finished creating reviews!")
 }
 
+
 async function rebuildDB() {
   try {
     client.connect()
     await dropTables()
     await createTables()
+
 
     await createInitialUsers()
 
@@ -217,6 +224,7 @@ async function rebuildDB() {
     await createInitialReviews()
     
     
+
     console.log('testing area')
     // console.log(await getAllProducts())
     
