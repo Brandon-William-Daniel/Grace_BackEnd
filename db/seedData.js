@@ -1,6 +1,7 @@
 const client = require("./client")
 const {createUser} = require('./users')
-
+const {createCatagory} = require('./catagories')
+const {createProduct, getProductById, getProductByCatagory, getAllProducts, destroyProduct, updateProduct, addProductToCart, buySingleProductNow} = require('./products')
 
 
 async function dropTables() {
@@ -45,7 +46,7 @@ async function createTables() {
         id SERIAL PRIMARY KEY,
         title VARCHAR(255),
         description TEXT,
-        price INTEGER NOT NULL,
+        price NUMERIC NOT NULL,
         invQty INTEGER NOT NULL,
         "catagoryId" INTEGER REFERENCES catagory(id),
         active BOOLEAN DEFAULT true
@@ -129,10 +130,10 @@ async function createInitialCatagory() {
     console.log("Starting to create catagories...")
 
     const catagoriesToCreate = [
-      { name: "For Men"}, 
-      { name: "For Women"},
-      { name: "Outdoor"},
-      { name: "Cheap"},
+      { catName: "For Men"}, 
+      { catName: "For Women"},
+      { catName: "Outdoor"},
+      { catName: "Cheap"},
       
     ]
     const catagories = await Promise.all(catagoriesToCreate.map(createCatagory))
@@ -226,14 +227,16 @@ async function createInitialReviews() {
   console.log("Finished creating reviews!")
 }
 
+
 async function rebuildDB() {
   try {
     client.connect()
     await dropTables()
     await createTables()
-    // await createInitialUsers()
-    // await createInitialCatagory()
-    // await createInitialProducts()
+    await createInitialUsers()
+    await createInitialCatagory()
+    await createInitialProducts()
+    // await getProdByCat()
     // await createInitialReviews()
     
     
