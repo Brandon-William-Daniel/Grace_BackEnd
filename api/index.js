@@ -48,8 +48,8 @@ const usersRouter = require('./users');
 router.use('/users', usersRouter);
 
 // ROUTER: /api/products
-// const productsRouter = require('./products');
-// router.use('/products', productsRouter);
+const productsRouter = require('./products');
+router.use('/products', productsRouter);
 
 // // ROUTER: /api/orders
 // const ordersRouter = require('./orders');

@@ -231,15 +231,6 @@ async function createInitialReviews() {
   console.log("Finished creating reviews!")
 }
 
-async function addprod(){
-  try {
-    console.log('starting to add prod')
-    const result = await buySingleProductNow({orderId: null, productId:1, quantity: 100, price: 1000})
-    console.log('done,', result)
-  } catch (error) {
-    console.log(error)
-  }
-}
 
 async function rebuildDB() {
   try {
@@ -251,7 +242,6 @@ async function rebuildDB() {
     await createInitialCatagory()
     await createInitialProducts()
     // await createInitialReviews()
-    await addprod()
     console.log('testing area')
     // console.log(await getAllUsers())
     
