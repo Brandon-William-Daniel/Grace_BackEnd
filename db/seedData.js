@@ -3,11 +3,9 @@ const client = require("./client")
 
 
 const {createUser, getAllUsers} = require('./users')
-const {createProduct, getProductById, createCatagory} = require('./products')
+const {createProduct, getProductById} = require('./products')
 const {list} = require('./seedProducts')
-
 const {createCatagory} = require('./catagories')
-const {createProduct, getProductById, getProductByCatagory, getAllProducts, destroyProduct, updateProduct, addProductToCart, buySingleProductNow} = require('./products')
 
 
 
