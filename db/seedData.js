@@ -5,7 +5,7 @@ const client = require("./client")
 const {createUser, getAllUsers} = require('./users')
 const {createProduct, getProductById, createCatagory} = require('./products')
 const {list} = require('./seedProducts')
-
+const {createReview} = require('./reviews')
 
 
 async function dropTables() {
@@ -60,7 +60,7 @@ async function createTables() {
         "productId" INTEGER REFERENCES products(id),
         "userId" INTEGER REFERENCES users(id),
         title VARCHAR(255),
-        review text,
+        description TEXT,
         UNIQUE ("productId", "userId")
       );
       CREATE TABLE "orderLine"(
@@ -203,24 +203,24 @@ async function createInitialReviews() {
   const reviewToCreate = [
     {
       productId: 1,
-      userId: 1,
+      userId: 2,
       title: 'Retread Works',
       review: 'It really worked to retread my bald tires. I stopped sliding in the rain'
     },
     {
         productId: 1,
-        userId: 1,
+        userId: 3,
         title: 'Retread Works',
         review: 'It really worked to retread my bald tires. I stopped sliding in the rain'
     },
     {
-        productId: 1,
-        userId: 1,
+        productId: 2,
+        userId: 4,
         title: 'Retread Works',
         review: 'It really worked to retread my bald tires. I stopped sliding in the rain'
     },
     {
-        productId: 1,
+        productId: 3,
         userId: 1,
         title: 'Retread Works',
         review: 'It really worked to retread my bald tires. I stopped sliding in the rain'
@@ -246,7 +246,7 @@ async function rebuildDB() {
 
     await createInitialCatagory()
     await createInitialProducts()
-    // await createInitialReviews()
+    await createInitialReviews()
     
     
     console.log('testing area')

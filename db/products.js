@@ -31,7 +31,7 @@ async function createCatagory({name}){
             VALUES ($1)
             RETURNING *;
         `, [name])
-        console.log(cat)
+      
         return cat
     } catch (error) {
         console.error(error)
