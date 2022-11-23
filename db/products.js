@@ -31,7 +31,7 @@ async function createCatagory({name}){
             VALUES ($1)
             RETURNING *;
         `, [name])
-        console.log(cat)
+      
         return cat
     } catch (error) {
         console.error(error)
@@ -68,13 +68,15 @@ async function getProductByCatagory(catagoryId){
 
 async function getAllProducts(){
     try {
-        const {rows} = await client.query(`
-            SELECT title, description, price
+
+        const {rows: [results]} = await client.query(`
+            SELECT *
             from products;
         `)
-        return rows
+        return results
+
     } catch (error) {
-        console.error(error.detail)
+        console.error(error)
     }
 }
 
