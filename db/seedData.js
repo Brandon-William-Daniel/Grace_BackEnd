@@ -1,4 +1,5 @@
 const client = require("./client")
+const {createUser, getAllUsers} = require('./users')
 
 
 
@@ -6,10 +7,13 @@ async function dropTables() {
   console.log("Dropping All Tables...")
   try {
     await client.query(`
-        DROP TABLE IF EXISTS orderDetails
-        DROP TABLE IF EXISTS reviews
-        DROP TABLE IF EXISTS order;
+        
+        DROP TABLE IF EXISTS "orderDetails";
+        DROP TABLE IF EXISTS "orderLine";
+        DROP TABLE IF EXISTS reviews;
+        
         DROP TABLE IF EXISTS products;
+        
         DROP TABLE IF EXISTS catagory;
         DROP TABLE IF EXISTS users;
     `)
@@ -34,8 +38,8 @@ async function createTables() {
       );
       CREATE TABLE catagory(
         "id" SERIAL PRIMARY KEY,
-        "catName" VARCHAR(255) UNIQUE NOT NULL,
-        "productId" INTEGER REFERENCES product(id)
+        "catName" VARCHAR(255) UNIQUE NOT NULL
+        
       );
       CREATE TABLE products(
         id SERIAL PRIMARY KEY,
@@ -43,30 +47,29 @@ async function createTables() {
         description TEXT,
         price INTEGER NOT NULL,
         invQty INTEGER NOT NULL,
-        "catagoryId" INTEGER REFERENCES catagory(id)
+        "catagoryId" INTEGER REFERENCES catagory(id),
         active BOOLEAN DEFAULT true
       );
       CREATE TABLE reviews(
-        "productId" INTEGER REFERENCES product(id),
-        "userId" INTEGER REFERENCES user(id),
+        "productId" INTEGER REFERENCES products(id),
+        "userId" INTEGER REFERENCES users(id),
         title VARCHAR(255),
         review text,
         UNIQUE ("productId", "userId")
       );
-      CREATE TABLE 'orderDetails'(
-        "orderId" INTEGER REFERENCES order(id),
-        "productId" INTEGER REFERENCES product(id),
-        quantity INTEGER,
-        price INTEGER
-      );
-      CREATE TABLE 'order'(
+      CREATE TABLE "orderLine"(
         id SERIAL PRIMARY KEY,
-        "orderId" INTEGER REFERENCES order(id),
-        "productId" INTEGER REFERENCES product(id),
-        "userId" INTEGER REFERENCES user(id),
+        "productId" INTEGER REFERENCES products(id),
+        "userId" INTEGER REFERENCES users(id),
         total INTEGER,
         current BOOLEAN DEFAULT true,
-        'shipTo' TEXT
+        "shipTo" TEXT
+      );
+      CREATE TABLE "orderDetails"(
+        "orderId" INTEGER REFERENCES "orderLine"(id),
+        "productId" INTEGER REFERENCES products(id),
+        quantity INTEGER,
+        price INTEGER
       );
       `)
       console.log("Tables Created")
@@ -87,7 +90,7 @@ async function createInitialUsers() {
         password: "will123",
         email: "will@yahoo.com",
         address: "123 A St. Baton Rouge, LA",
-        isAdmin: true
+        isAdmin: false
         },
         { 
         username: "Daniel", 
@@ -229,12 +232,13 @@ async function rebuildDB() {
     await dropTables()
     await createTables()
     await createInitialUsers()
-    await createInitialCatagory()
-    await createInitialProducts()
-    await createInitialReviews()
+    // await createInitialCatagory()
+    // await createInitialProducts()
+    // await createInitialReviews()
     
     
     console.log('testing area')
+    // console.log(await getAllUsers())
     
 console.log('Rebuild Complete')
   } catch (error) {
