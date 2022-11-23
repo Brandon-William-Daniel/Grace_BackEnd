@@ -181,7 +181,7 @@ async function createInitialReviews() {
         title: 'Retread Works',
         review: 'It really worked to retread my bald tires. I stopped sliding in the rain'
     },
-    {
+    { 
         productId: 2,
         userId: 4,
         title: 'Retread Works',
