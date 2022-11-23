@@ -93,25 +93,27 @@ async function updateProduct({id, title, description, price, invQty, catagoryId}
     }
 }
 
-async function addProductToCart({}){
-    // need to join table
+async function addProductToCart({productId, userId, total, current, shipTo}){
+    //
     try {
-        const result = await client.query(`
-
-
-        `)
-        return result
+        const {rows} = await client.query(`
+           INSERT INTO "orderLine" ("productId", "userId", total, current, "shipTo")
+           VALUES ($1, $2, $3, $4, $5)
+           RETURNING *;
+       `, [productId, userId, total, current, shipTo])
+        return rows
     } catch (error) {
         console.error(error.detail)
     }
 }
 
-async function buySingleProductNow({orderId, productId, quanity}){
+async function buySingleProductNow({orderId, productId, quantity, price}){
     try {
-        // join table
         const result = await client.query(`
-           
-        `,)
+           INSERT INTO "orderDetails" ( "orderId", "productId", quantity, price)
+           VALUES ($1, $2, $3, $4)
+           RETURNING *
+        `, [orderId, productId, quantity, price])
     } catch (error) {
         console.error(error.deatil)
     }

@@ -11,6 +11,7 @@ const  bcrypt  = require("bcrypt");
 
 
 // user functions
+
 async function createUser( {username, password, email, address}) {
   const hashedPassword = await bcrypt.hash(password, 10);
   try{
@@ -20,11 +21,13 @@ async function createUser( {username, password, email, address}) {
           RETURNING id, username, email, address; 
       `,[username, hashedPassword, email, address])
     //  console.log(users)
+
       return users
     }catch(error){
       console.log(error)
     }
 }
+
 
 async function getUserById(userId) {
     try {
@@ -89,4 +92,5 @@ module.exports = {
     getAllUsers,
     getUserById,
     getUserByUsername
+
   }
