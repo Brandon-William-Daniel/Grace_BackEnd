@@ -26,26 +26,26 @@ async function createProduct({title, description, price, invQty, catagoryId, act
 
 async function getProductById(id){
     try {
-        const result = await client.query(`
+        const {rows: [product]} = await client.query(`
             SELECT title, description, price
             FROM products
             WHERE id=${id};
         `)
-        return result
+        return product
     } catch (error) {
         console.error(error.detail)
     }
 }
 
 
-async function getProdcutByCatagory(catagory){
+async function getProductByCatagory(catagoryId){
     try {
-        const result = await client.query(`
+        const {rows} = await client.query(`
             SELECT title, description, price
             FROM products
-            WHERE "catName"=${catagory};
+            WHERE "catagoryId"=${catagoryId};
         `)
-        return result
+        return rows
     } catch (error) {
         console.error(error.detail)
     }
@@ -53,11 +53,11 @@ async function getProdcutByCatagory(catagory){
 
 async function getAllProducts(){
     try {
-        const result = await client.query(`
-            SELECT *
+        const {rows} = await client.query(`
+            SELECT title, description, price
             from products;
         `)
-        return result
+        return rows
     } catch (error) {
         console.error(error.detail)
     }
@@ -79,10 +79,10 @@ async function updateProduct({id, title, description, price, invQty, catagoryId}
     try {
         const result = await client.query(`
             UPDATE products
-            SET title=$1
-                description=$2
-                price=$3
-                invQty=$4
+            SET title=$1,
+                description=$2,
+                price=$3,
+                invQty=$4,
                 "catagoryId"=$5
             WHERE id=${id}
             RETURNING *;
@@ -93,27 +93,25 @@ async function updateProduct({id, title, description, price, invQty, catagoryId}
     }
 }
 
-async function addProductToCart({productId, userId, shipTo}){
+async function addProductToCart({}){
+    // need to join table
     try {
         const result = await client.query(`
-            INSERT INTO "orderLine"
-            VALUES ($1)
-            WHERE "prodcutId"=${productId}
-            AND
-            WHERE "userId"=${userId}
-        `, [shipTo])
+
+
+        `)
+        return result
     } catch (error) {
         console.error(error.detail)
     }
 }
 
-async function buySingleProductNow({productId, quanity, price}){
+async function buySingleProductNow({orderId, productId, quanity}){
     try {
+        // join table
         const result = await client.query(`
-            INSERT INTO "orderDetails"
-            VALUES ($1, $2)
-            WHERE "productId"=${productId}
-        `, [quanity, price])
+           
+        `,)
     } catch (error) {
         console.error(error.deatil)
     }
@@ -124,7 +122,7 @@ module.exports = {
     updateProduct,
     destroyProduct,
     getAllProducts,
-    getProdcutByCatagory,
+    getProductByCatagory,
     getProductById,
     addProductToCart
 }
