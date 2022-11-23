@@ -7,12 +7,15 @@
 const express = require('express');
 const productsRouter = express.Router();
 const {getAllProducts, createProduct, destroyProduct, updateProduct} = require('../db/products')
-const {requireUser} = require('./utils')
-productsRouter.use((req, res, next) => {
-    console.log('a request is meing made to products')
-    next();
-})
 
+
+// productsRouter.use((req, res, next) => {
+//     console.log('a request is being made to products')
+//     next();
+// })
+
+
+// GET /api/products/
 productsRouter.get('/', async (req, res, next) => {
     try {
         const products = await getAllProducts();

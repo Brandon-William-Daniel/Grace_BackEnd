@@ -226,7 +226,7 @@ async function rebuildDB() {
     
 
     console.log('testing area')
-    console.log(await getProductById(1))
+    console.log(await getAllProducts())
     
 console.log('Rebuild Complete')
   } catch (error) {
