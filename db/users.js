@@ -11,14 +11,14 @@ const  bcrypt  = require("bcrypt");
 
 
 // user functions
-async function createUser( {username, password, email, address, isAdmin }) {
+async function createUser( {username, password, email, address}) {
   const hashedPassword = await bcrypt.hash(password, 10);
   try{
       const {rows: [users]} = await client.query(`
-          INSERT INTO users(username, password, email, address, "isAdmin")
-          VALUES ($1,$2,$3,$4,$5)
+          INSERT INTO users(username, password, email, address)
+          VALUES ($1,$2,$3,$4)
           RETURNING id, username, email, address; 
-      `,[username, hashedPassword, email, address, isAdmin])
+      `,[username, hashedPassword, email, address])
     //  console.log(users)
       return users
     }catch(error){
@@ -81,6 +81,8 @@ async function getUserById(userId) {
       throw error;
     }
   }
+
+  //getUsersInfo -- Need other functions to complete. May put on API
 
 module.exports = {
     createUser,

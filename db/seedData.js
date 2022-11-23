@@ -1,5 +1,5 @@
 const client = require("./client")
-const {createUser} = require('./users')
+const {createUser, getAllUsers} = require('./users')
 
 
 
@@ -90,7 +90,7 @@ async function createInitialUsers() {
         password: "will123",
         email: "will@yahoo.com",
         address: "123 A St. Baton Rouge, LA",
-        isAdmin: true
+        isAdmin: false
         },
         { 
         username: "Daniel", 
@@ -231,13 +231,14 @@ async function rebuildDB() {
     client.connect()
     await dropTables()
     await createTables()
-    // await createInitialUsers()
+    await createInitialUsers()
     // await createInitialCatagory()
     // await createInitialProducts()
     // await createInitialReviews()
     
     
     console.log('testing area')
+    // console.log(await getAllUsers())
     
 console.log('Rebuild Complete')
   } catch (error) {
