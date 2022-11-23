@@ -1,5 +1,9 @@
 const client = require("./client")
+
+
+
 const {createUser, getAllUsers} = require('./users')
+
 
 
 
@@ -231,7 +235,9 @@ async function rebuildDB() {
     client.connect()
     await dropTables()
     await createTables()
+
     await createInitialUsers()
+
     // await createInitialCatagory()
     // await createInitialProducts()
     // await createInitialReviews()
