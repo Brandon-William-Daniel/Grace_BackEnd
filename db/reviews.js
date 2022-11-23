@@ -13,6 +13,7 @@ async function getAllReviewsByProduct () {
          SELECT review.*, products.product as "review"
          FROM reviews JOIN
          products ON reviews."productId"=product.Id`) 
+         return(results)
       } catch (error) {
          console.log(error)
       }
@@ -33,8 +34,8 @@ async function getAllReviewsByUser (username) {
      }
 }
 
-async function updateReview(title, description) {
-     const setString = Object.keys(description).map(
+async function updateReview(pid, uid, {...fields}) {
+     const setString = Object.keys(fields).map(
         (key, index) => `"${key}"=$${index + 1}`
      ).join(', ');
 
@@ -43,9 +44,9 @@ async function updateReview(title, description) {
           const {rows: [reviews] } = await client.query(`
           UPDATE reviews
           SET ${setString}
-          WHERE title=${title}
+          WHERE "productId"=${pid} AND "userId"=${uid}
           RETURNING *;
-          `, Object.values(description))
+          `, Object.values(fields))
 
           return reviews;
         }
@@ -68,7 +69,7 @@ async function deleteReview(productId, userId) {
 
 async function createReview({productId, userId, title, description}){
      try {
-        const results = await client.query(`
+        const {rows: [results]} = await client.query(`
         INSERT INTO reviews ("productId", "userId", title, description)
         VALUES ($1, $2, $3, $4)
         RETURNING *;
@@ -84,5 +85,5 @@ module.exports = {
    getAllReviewsByUser,
    updateReview,
    deleteReview, 
-   createReview
+   createReview,
 }
