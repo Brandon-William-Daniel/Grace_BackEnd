@@ -94,9 +94,7 @@ async function destroyProduct(productId){
 
 
 async function updateProduct(productid, {...fields}){
-    console.log(productid)
-    console.log('this is the fields', fields)
-    console.log(Object.values(fields))
+    
     const setString = Object.keys(fields).map(
         (key, index) => `"${ key }"=$${ index + 1 }`
       ).join(', ');
@@ -108,14 +106,14 @@ async function updateProduct(productid, {...fields}){
       }
     
       try {
-        console.log('here')
+       
         const  {rows:[result]}  = await client.query(`
           UPDATE products
           SET ${setString}
           WHERE id=${ productid }
           RETURNING *;
         `, Object.values(fields));
-    console.log('updated Products', result)
+    
         return result;
       } catch (error) {
         console.log(error)
