@@ -9,10 +9,10 @@ const productsRouter = express.Router();
 const {getAllProducts, createProduct, destroyProduct, updateProduct, getProductById} = require('../db/products')
 const {requireUser} = require('./utils');
 
-productsRouter.use((req, res, next) => {
-    console.log('a request is being made to products')
-    next();
-})
+// productsRouter.use((req, res, next) => {
+//     console.log('a request is being made to products')
+//     next();
+// })
 
 
 // GET /api/products/
