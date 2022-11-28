@@ -13,7 +13,7 @@ const client = require("./client");
 async function createProduct({title, description, price, invQty, photo, catagoryId}){
     try {
         const {rows: [products]} = await client.query(`
-            INSERT INTO products (title, description, price, invQty, photo, "catagoryId")
+            INSERT INTO products (title, description, price, "invQty", photo, "catagoryId")
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *;
         `, [title, description, price, invQty, photo, catagoryId])
@@ -93,23 +93,36 @@ async function destroyProduct(productId){
 }
 
 
-async function updateProduct({id, title, description, price, invQty, catagoryId}){
-    try {
-        const {rows: [result]} = await client.query(`
-            UPDATE products
-            SET title=$1,
-                description=$2,
-                price=$3,
-                invQty=$4,
-                "catagoryId"=$5
-            WHERE id=${id}
-            RETURNING *;
-        `, [title, description, price, invQty, catagoryId])
-        return result
-    } catch (error) {
-        console.error(error.detail)
+async function updateProduct(productid, {...fields}){
+    console.log(productid)
+    console.log('this is the fields', fields)
+    console.log(Object.values(fields))
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index + 1 }`
+      ).join(', ');
+    console.log('setString', setString)
+      // return if no fields
+      if (setString.length === 0) {
+    
+        return;
+      }
+    
+      try {
+        console.log('here')
+        const  {rows:[result]}  = await client.query(`
+          UPDATE products
+          SET ${setString}
+          WHERE id=${ productid }
+          RETURNING *;
+        `, Object.values(fields));
+    console.log('updated Products', result)
+        return result;
+      } catch (error) {
+        console.log(error)
+        throw error;
+      }
+    
     }
-}
 
 async function addProductToCart({productId, userId, total, current, shipTo}){
     //
