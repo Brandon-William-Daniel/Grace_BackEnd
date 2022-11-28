@@ -3,6 +3,8 @@ const catagoriesRouter = express.Router()
 const {createCatagory} = require('../db/catagories')
 const {requireUser} = require('./utils')
 
+//POST /api/catagories/newcatagory
+
 catagoriesRouter.post('/newcatagory', requireUser,  async (req, res) => {
     const {catName} = req.body
     const catData = {}

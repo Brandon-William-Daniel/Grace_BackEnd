@@ -67,13 +67,13 @@ async function deleteReview(productId, userId) {
      }
 }
 
-async function createReview({productId, userId, title, description}){
+async function createReview({productId, userId, title, review}){
      try {
         const {rows: [results]} = await client.query(`
-        INSERT INTO reviews ("productId", "userId", title, description)
+        INSERT INTO reviews ("productId", "userId", title, review)
         VALUES ($1, $2, $3, $4)
         RETURNING *;
-        `, [productId, userId, title, description])
+        `, [productId, userId, title, review])
         return results
      } catch (error) {
         console.log(error)

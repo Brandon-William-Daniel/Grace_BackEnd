@@ -45,13 +45,15 @@ usersRouter.post('/register', async (req, res, next) => {
     
         res.send({ 
           user,
-          message: "You are ready to start tracking your fitness journey",
+          message: "You are ready to start shopping with us",
           token 
         });
       } catch ({ name, message }) {
         next({ name, message })
       } 
     });
+
+    //POST api/users/login
 
     usersRouter.post('/login', async (req, res, next) => {
         const { username, password } = req.body;
@@ -66,6 +68,7 @@ usersRouter.post('/register', async (req, res, next) => {
       try {
         //Can Probably Use getUser func
         const user = await getUserByUsername(username);
+    
         const hashedPassword = user.password;
         const isValid = await bcrypt.compare(password, hashedPassword)
         if (user && isValid) {
@@ -89,6 +92,7 @@ usersRouter.post('/register', async (req, res, next) => {
     });
   
 // GET /api/users/me
+
 usersRouter.get('/me', async (req, res, next) => {
     const {username} = req.body;
     console.log(username)
@@ -104,6 +108,7 @@ usersRouter.get('/me', async (req, res, next) => {
 );
 
 // Get /api/users/:username/orders
+
 usersRouter.get('/:username/orders', async (req, res, next) => {
     const {username} = req.params.username;
     console.log(username)
