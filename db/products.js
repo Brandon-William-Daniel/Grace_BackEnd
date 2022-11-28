@@ -68,13 +68,6 @@ async function getProductByCatagory(catagoryId){
 
 async function getAllProducts(){
     try {
-<<<<<<< HEAD
-        const {rows} = await client.query(`
-            SELECT title, description, price
-            from products;
-        `)
-        return results
-=======
 
 
         const {rows: [results]} = await client.query(`
@@ -82,9 +75,6 @@ async function getAllProducts(){
             from products;
         `)
         return results
-
-
->>>>>>> 8fc3fcacd7895ce48ae39f74cd1f01aabb64742b
     } catch (error) {
         console.error(error)
     }
