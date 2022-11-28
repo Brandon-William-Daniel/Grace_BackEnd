@@ -40,9 +40,10 @@ async function createCatagory({name}){
 
 
 async function getProductById(id){
+    console.log(id)
     try {
         const {rows: [products]} = await client.query(`
-            SELECT title, description, price
+            SELECT *
             FROM products
             WHERE id=${id};
         `)
