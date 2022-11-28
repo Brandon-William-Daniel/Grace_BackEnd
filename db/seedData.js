@@ -10,8 +10,6 @@ const {createCatagory} = require('./catagories')
 
 
 const {createReview} = require('./reviews')
->>>>>>>>> Temporary merge branch 2
-
 
 async function dropTables() {
   console.log("Dropping All Tables...")
