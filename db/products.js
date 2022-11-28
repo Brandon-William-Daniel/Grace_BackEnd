@@ -46,7 +46,7 @@ async function getProductById(id){
             FROM products
             WHERE id=${id};
         `)
-        return result
+        return products
     } catch (error) {
         console.error(error)
     }
@@ -70,11 +70,11 @@ async function getAllProducts(){
     try {
 
 
-        const {rows: [results]} = await client.query(`
+        const {rows} = await client.query(`
             SELECT *
             from products;
         `)
-        return results
+        return rows
     } catch (error) {
         console.error(error)
     }
