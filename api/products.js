@@ -6,7 +6,7 @@
 
 const express = require('express');
 const productsRouter = express.Router();
-const {getAllProducts, createProduct, destroyProduct, updateProduct} = require('../db/products')
+const {getAllProducts, createProduct, destroyProduct, updateProduct, getProductById} = require('../db/products')
 const {requireUser} = require('./utils');
 
 // productsRouter.use((req, res, next) => {
