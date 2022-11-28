@@ -10,11 +10,13 @@ const {requireUser} = require('./utils');
 
 //GET /api/reviews/
 
-reviewRouter.get('/', async (req, res, next) => {
+reviewRouter.get('/:productId', async (req, res, next) => {
+    const productId = req.params.productId
+    // console.log(productId)
     try {
         // const allReviews = await getAllReviews();
-        const allReviews = await getAllReviewsByProduct()
-
+        const allReviews = await getAllReviewsByProduct(productId)
+console.log(allReviews)
         res.send({
             allReviews
         })
