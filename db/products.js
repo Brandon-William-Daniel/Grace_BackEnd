@@ -70,11 +70,11 @@ async function getAllProducts(){
     try {
 
 
-        const {rows: [results]} = await client.query(`
+        const {rows} = await client.query(`
             SELECT *
             from products;
         `)
-        return results
+        return rows
     } catch (error) {
         console.error(error)
     }
