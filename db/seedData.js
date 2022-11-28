@@ -5,8 +5,12 @@ const client = require("./client")
 const {createUser, getAllUsers} = require('./users')
 const {createProduct, getProductById} = require('./products')
 const {list} = require('./seedProducts')
+
 const {createCatagory} = require('./catagories')
+
+
 const {createReview} = require('./reviews')
+>>>>>>>>> Temporary merge branch 2
 
 
 async function dropTables() {
@@ -156,7 +160,7 @@ async function createInitialCatagory() {
 
 async function createInitialProducts() {
   console.log("starting to create products...")
-console.log(list())
+// console.log(list())
   const productsToCreate = list()
 
   const products = await Promise.all(
@@ -211,6 +215,12 @@ async function rebuildDB() {
     client.connect()
     await dropTables()
     await createTables()
+<<<<<<<<< Temporary merge branch 1
+    // await createInitialUsers()
+    // await createInitialCatagory()
+    // await createInitialProducts()
+    // await createInitialReviews()
+=========
 
     await createInitialUsers()
 
@@ -219,8 +229,9 @@ async function rebuildDB() {
     // await createInitialReviews()
     
     
+>>>>>>>>> Temporary merge branch 2
     console.log('testing area')
-    console.log(await getProductById(1))
+    // console.log(await getAllProducts())
     
 console.log('Rebuild Complete')
   } catch (error) {
