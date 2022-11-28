@@ -7,12 +7,14 @@
 
 const client = require('./client')
 
-async function getAllReviewsByProduct () {
+async function getAllReviewsByProduct (productId) {
+   console.log(productId)
       try {
-         const { rows: results } = await client.query(`
-         SELECT review.*, products.product as "review"
-         FROM reviews JOIN
-         products ON reviews."productId"=product.Id`) 
+         const {rows: [results]} = await client.query(`
+         SELECT *
+         FROM reviews
+         WHERE "productId"=${productId}`) 
+         console.log(results)
          return(results)
       } catch (error) {
          console.log(error)
@@ -67,13 +69,13 @@ async function deleteReview(productId, userId) {
      }
 }
 
-async function createReview({productId, userId, title, review}){
+async function createReview({productId, userId, title, description}){
      try {
         const {rows: [results]} = await client.query(`
-        INSERT INTO reviews ("productId", "userId", title, review)
+        INSERT INTO reviews ("productId", "userId", title, description)
         VALUES ($1, $2, $3, $4)
         RETURNING *;
-        `, [productId, userId, title, review])
+        `, [productId, userId, title, description])
         return results
      } catch (error) {
         console.log(error)
