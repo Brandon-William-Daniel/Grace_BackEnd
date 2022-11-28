@@ -77,15 +77,37 @@ productsRouter.delete('/deleteproduct/:productid', requireUser, async (req, res)
 productsRouter.patch('/updateproduct/:productid', requireUser, async (req, res) => {
     const {productid} = req.params
     const {title, description, price, invQty, catagoryId} = req.body
+    const updateFields = {}
+
+    if (title) {
+        updateFields.title = title;
+      }
+    
+    if (description) {
+        updateFields.description = description;
+      }
+  
+    if (price) {
+          updateFields.price = price;
+        }
+
+    if (invQty) {
+            updateFields.invQty = invQty;
+          }
+      
+    if (catagoryId) {
+              updateFields.catagoryId = catagoryId;
+            }
     try {
-        const updatedProduct = await updateProduct({id: productid, title, description, price, invQty, catagoryId})
+        const updatedProduct = await updateProduct(productid, updateFields)
+        console.log('this is updated', updatedProduct)
         if(updatedProduct){
             console.log('you have updated the product')
             res.send({
                 updatedProduct
             })
         }else{
-            console.log('failed to update post')
+            console.log('failed to update product')
         }
     } catch (error) {
         console.error(error.detail)

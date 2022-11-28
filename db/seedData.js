@@ -54,7 +54,7 @@ async function createTables() {
         title VARCHAR(255),
         description TEXT,
         price MONEY NOT NULL,
-        invQty INTEGER NOT NULL,
+        "invQty" INTEGER NOT NULL,
         photo TEXT,
         "catagoryId" INTEGER REFERENCES catagory(id),
         active BOOLEAN DEFAULT true
