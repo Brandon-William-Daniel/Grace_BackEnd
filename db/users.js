@@ -74,7 +74,7 @@ async function getUserById(userId) {
       `, [username]);
   
       if (!user) {
-        return null
+        return 'User does not exist'
       }
   
      

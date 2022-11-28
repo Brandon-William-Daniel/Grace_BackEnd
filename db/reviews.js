@@ -7,12 +7,14 @@
 
 const client = require('./client')
 
-async function getAllReviewsByProduct () {
+async function getAllReviewsByProduct (productId) {
+   console.log(productId)
       try {
-         const { rows: results } = await client.query(`
-         SELECT review.*, products.product as "review"
-         FROM reviews JOIN
-         products ON reviews."productId"=product.Id`) 
+         const {rows: [results]} = await client.query(`
+         SELECT *
+         FROM reviews
+         WHERE "productId"=${productId}`) 
+         console.log(results)
          return(results)
       } catch (error) {
          console.log(error)

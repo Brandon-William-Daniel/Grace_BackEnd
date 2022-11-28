@@ -10,7 +10,7 @@
 
 const client = require("./client");
 
-async function createProduct({title, description, price, invQty, photo,catagoryId}){
+async function createProduct({title, description, price, invQty, photo, catagoryId}){
     try {
         const {rows: [products]} = await client.query(`
             INSERT INTO products (title, description, price, invQty, photo, "catagoryId")
@@ -46,7 +46,7 @@ async function getProductById(id){
             FROM products
             WHERE id=${id};
         `)
-        return result
+        return products
     } catch (error) {
         console.error(error)
     }
@@ -94,7 +94,7 @@ async function destroyProduct(productId){
 
 async function updateProduct({id, title, description, price, invQty, catagoryId}){
     try {
-        const result = await client.query(`
+        const {rows: [result]} = await client.query(`
             UPDATE products
             SET title=$1,
                 description=$2,

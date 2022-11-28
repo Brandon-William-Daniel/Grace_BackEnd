@@ -1,9 +1,3 @@
-// Reviews -- Brandon
-//         POST -- /:product/review Post a review
-//         GET -- /:product/
-//         DELETE --/:product/delete removes the review from the post Must match userId
-//         PATCH -- /:product/update Updates review Must match userId
-
 const express = require('express')
 const reviewRouter = express.Router();
 const {getAllReviews, 
@@ -14,10 +8,15 @@ const {getAllReviews,
 
 const {requireUser} = require('./utils');
 
-reviewRouter.get('/', async (req, res, next) => {
-    try {
-        const allReviews = await getAllReviews();
+//GET /api/reviews/
 
+reviewRouter.get('/:productId', async (req, res, next) => {
+    const productId = req.params.productId
+    // console.log(productId)
+    try {
+        // const allReviews = await getAllReviews();
+        const allReviews = await getAllReviewsByProduct(productId)
+console.log(allReviews)
         res.send({
             allReviews
         })
@@ -25,7 +24,9 @@ reviewRouter.get('/', async (req, res, next) => {
         console.log(error)
     }
 })
-// POST /api/reviews/3/newreview
+
+// POST /api/reviews/:productId/newreview
+
 reviewRouter.post('/:productId/newreview', requireUser, async (req, res, next) => {
     const {title, review} = req.body
     // console.log('this is the params', req.params.productId)
@@ -50,6 +51,8 @@ reviewRouter.post('/:productId/newreview', requireUser, async (req, res, next) =
     }
 })
 
+//DELETE /api/reviews/deletereview/:productId/:userId
+
 reviewRouter.delete('/deletereview/:productId/:userId', requireUser, async (req, res, next) => {
     const productId = req.params.productId;
     const userId = req.params.userId;
@@ -62,6 +65,8 @@ reviewRouter.delete('/deletereview/:productId/:userId', requireUser, async (req,
         console.log(error)
     }
 })
+
+//PATCH /api/reviews/updateReview/:productId/:userId
 
 reviewRouter.patch('/updateReview/:productId/:userId', requireUser, async (req, res, next) => {
     const productId = req.params.productId;
