@@ -92,6 +92,18 @@ productsRouter.patch('/updateproduct/:productid', requireUser, async (req, res) 
     }
 })
 
+productsRouter.get("/:productId", async (req, res) => {
+    const {productId} = req.params
+    console.log(productId)
+      try {
+          const product = await getProductById(productId)
+          res.send({
+              product
+          })
+      } catch (error) {
+          console.error(error.detail)
+      }
+  })
 
 
 module.exports = productsRouter;
