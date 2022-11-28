@@ -46,7 +46,7 @@ async function getProductById(id){
             FROM products
             WHERE id=${id};
         `)
-        return result
+        return products
     } catch (error) {
         console.error(error)
     }
