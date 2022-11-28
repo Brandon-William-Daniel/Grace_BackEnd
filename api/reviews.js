@@ -16,7 +16,8 @@ const {requireUser} = require('./utils');
 
 reviewRouter.get('/', async (req, res, next) => {
     try {
-        const allReviews = await getAllReviews();
+        // const allReviews = await getAllReviews();
+        const allReviews = await getAllReviewsByProduct()
 
         res.send({
             allReviews
