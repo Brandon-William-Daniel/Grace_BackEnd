@@ -16,6 +16,7 @@ const {requireUser} = require('./utils');
 
 
 // GET /api/products/
+
 productsRouter.get('/', async (req, res, next) => {
     try {
         const products = await getAllProducts();
@@ -27,14 +28,17 @@ productsRouter.get('/', async (req, res, next) => {
     }
 })
 
+//POST /api/products/newproduct
+
 productsRouter.post('/newproduct', requireUser, async (req, res, next) => {
-    const {title, description, price, invQty, catagoryId} = req.body
+    const {title, description, price, invQty, photo, catagoryId} = req.body
     const productData = {}
     try {
       productData.title = title
       productData.description = description
       productData.price = price
       productData.invQty = invQty
+      productData.photo = photo
       productData.catagoryId = catagoryId
       const newProduct = await createProduct(productData)
       if(newProduct){
@@ -49,6 +53,8 @@ productsRouter.post('/newproduct', requireUser, async (req, res, next) => {
         console.error(error.detail)
     }
 })
+
+//DELETE api/products/deleteproduct/:productid
 
 productsRouter.delete('/deleteproduct/:productid', requireUser, async (req, res) => {
     const {productid} = req.params
@@ -65,6 +71,8 @@ productsRouter.delete('/deleteproduct/:productid', requireUser, async (req, res)
         console.error(error.detail)
     }
 })
+
+//PATCH /api/products/updateproduct/:productid
 
 productsRouter.patch('/updateproduct/:productid', requireUser, async (req, res) => {
     const {productid} = req.params
