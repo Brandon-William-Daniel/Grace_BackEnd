@@ -213,12 +213,11 @@ async function rebuildDB() {
     client.connect()
     await dropTables()
     await createTables()
-<<<<<<<<< Temporary merge branch 1
     // await createInitialUsers()
     // await createInitialCatagory()
     // await createInitialProducts()
     // await createInitialReviews()
-=========
+
 
     await createInitialUsers()
 
@@ -227,7 +226,6 @@ async function rebuildDB() {
     // await createInitialReviews()
     
     
->>>>>>>>> Temporary merge branch 2
     console.log('testing area')
     // console.log(await getAllProducts())
     
