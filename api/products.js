@@ -6,7 +6,7 @@
 
 const express = require('express');
 const productsRouter = express.Router();
-const {getAllProducts, createProduct, destroyProduct, updateProduct, getProductById} = require('../db/products')
+const {getAllProducts, createProduct, destroyProduct, updateProduct} = require('../db/products')
 const {requireUser} = require('./utils');
 
 // productsRouter.use((req, res, next) => {
@@ -21,18 +21,6 @@ productsRouter.get('/', async (req, res, next) => {
         const products = await getAllProducts();
         res.send({
             products
-        })
-    } catch (error) {
-        console.error(error.detail)
-    }
-})
-
-productsRouter.get("/:productId", async (req, res) => {
-  const {productId} = req.params
-    try {
-        const product = await getProductById(productId)
-        res.send({
-            product
         })
     } catch (error) {
         console.error(error.detail)
@@ -96,6 +84,18 @@ productsRouter.patch('/updateproduct/:productid', requireUser, async (req, res) 
     }
 })
 
+productsRouter.get("/:productId", async (req, res) => {
+    const {productId} = req.params
+    console.log(productId)
+      try {
+          const product = await getProductById(productId)
+          res.send({
+              product
+          })
+      } catch (error) {
+          console.error(error.detail)
+      }
+  })
 
 
 module.exports = productsRouter;
