@@ -28,7 +28,7 @@ console.log(allReviews)
 // POST /api/reviews/:productId/newreview
 
 reviewRouter.post('/:productId/newreview', requireUser, async (req, res, next) => {
-    const {title, review} = req.body
+    const {title, description} = req.body
     // console.log('this is the params', req.params.productId)
     const reviewData = {}
 
@@ -36,7 +36,7 @@ reviewRouter.post('/:productId/newreview', requireUser, async (req, res, next) =
         reviewData.productId = req.params.productId
         reviewData.userId = req.user.id
         reviewData.title = title
-        reviewData.review = review
+        reviewData.review = description
         const createdReview = await createReview(reviewData)
         if(createdReview){
             res.send({createdReview})

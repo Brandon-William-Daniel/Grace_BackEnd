@@ -176,25 +176,25 @@ async function createInitialReviews() {
       productId: 1,
       userId: 2,
       title: 'Retread Works',
-      review: 'It really worked to retread my bald tires. I stopped sliding in the rain'
+      description: 'It really worked to retread my bald tires. I stopped sliding in the rain'
     },
     {
         productId: 1,
         userId: 3,
         title: 'This is great',
-        review: 'I will never have to get another one ever again'
+        description: 'I will never have to get another one ever again'
     },
     { 
         productId: 2,
         userId: 4,
         title: 'Not that good',
-        review: 'This is one of the worst products i have ever used'
+        description: 'This is one of the worst products i have ever used'
     },
     {
         productId: 3,
         userId: 1,
         title: 'Price isnt the best',
-        review: 'It does everything I need it to i just wish it was a little cheaper'
+        description: 'It does everything I need it to i just wish it was a little cheaper'
     },
     
   ]
