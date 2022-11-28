@@ -31,13 +31,14 @@ productsRouter.get('/', async (req, res, next) => {
 //POST /api/products/newproduct
 
 productsRouter.post('/newproduct', requireUser, async (req, res, next) => {
-    const {title, description, price, invQty, catagoryId} = req.body
+    const {title, description, price, invQty, photo, catagoryId} = req.body
     const productData = {}
     try {
       productData.title = title
       productData.description = description
       productData.price = price
       productData.invQty = invQty
+      productData.photo = photo
       productData.catagoryId = catagoryId
       const newProduct = await createProduct(productData)
       if(newProduct){
