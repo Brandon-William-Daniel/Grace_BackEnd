@@ -75,7 +75,6 @@ async function getAllProducts(){
             from products;
         `)
         return results
->>>>>>>>> Temporary merge branch 2
     } catch (error) {
         console.error(error)
     }
