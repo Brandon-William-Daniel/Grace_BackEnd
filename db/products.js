@@ -13,7 +13,7 @@ const client = require("./client");
 async function createProduct({title, description, price, invQty, photo, catagoryId}){
     try {
         const {rows: [products]} = await client.query(`
-            INSERT INTO products (title, description, price, invQty, photo, "catagoryId")
+            INSERT INTO products (title, description, price, "invQty", photo, "catagoryId")
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *;
         `, [title, description, price, invQty, photo, catagoryId])
@@ -40,9 +40,10 @@ async function createCatagory({name}){
 
 
 async function getProductById(id){
+    console.log(id)
     try {
         const {rows: [products]} = await client.query(`
-            SELECT title, description, price
+            SELECT *
             FROM products
             WHERE id=${id};
         `)
@@ -56,7 +57,7 @@ async function getProductById(id){
 async function getProductByCatagory(catagoryId){
     try {
         const {rows} = await client.query(`
-            SELECT title, description, price
+            SELECT *
             FROM products
             WHERE "catagoryId"=${catagoryId};
         `)
@@ -92,23 +93,34 @@ async function destroyProduct(productId){
 }
 
 
-async function updateProduct({id, title, description, price, invQty, catagoryId}){
-    try {
-        const {rows: [result]} = await client.query(`
-            UPDATE products
-            SET title=$1,
-                description=$2,
-                price=$3,
-                invQty=$4,
-                "catagoryId"=$5
-            WHERE id=${id}
-            RETURNING *;
-        `, [title, description, price, invQty, catagoryId])
-        return result
-    } catch (error) {
-        console.error(error.detail)
+async function updateProduct(productid, {...fields}){
+    
+    const setString = Object.keys(fields).map(
+        (key, index) => `"${ key }"=$${ index + 1 }`
+      ).join(', ');
+    console.log('setString', setString)
+      // return if no fields
+      if (setString.length === 0) {
+    
+        return;
+      }
+    
+      try {
+       
+        const  {rows:[result]}  = await client.query(`
+          UPDATE products
+          SET ${setString}
+          WHERE id=${ productid }
+          RETURNING *;
+        `, Object.values(fields));
+    
+        return result;
+      } catch (error) {
+        console.log(error)
+        throw error;
+      }
+    
     }
-}
 
 async function addProductToCart({productId, userId, total, current, shipTo}){
     //

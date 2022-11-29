@@ -11,6 +11,8 @@ const {
     createUser, 
     getAllUsers, 
      } = require('../db/users');
+const {requireUser} = require('./utils');
+
 const bcrypt  = require("bcrypt");
 const jwt = require('jsonwebtoken');
 
@@ -37,7 +39,7 @@ usersRouter.post('/register', async (req, res, next) => {
           address
         });
         
-    
+    console.log(user)
         const token = jwt.sign({id: user.id, 
           username: username 
         }, process.env.JWT_SECRET, {
@@ -109,7 +111,7 @@ usersRouter.get('/me', async (req, res, next) => {
 
 // Get /api/users/:username/orders
 
-usersRouter.get('/:username/orders', async (req, res, next) => {
+usersRouter.get('/:username/orders', requireUser, async (req, res, next) => {
     const {username} = req.params.username;
     console.log(username)
     try {
