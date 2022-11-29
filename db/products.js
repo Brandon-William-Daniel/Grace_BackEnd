@@ -39,14 +39,15 @@ async function createCatagory({name}){
 }
 
 
-async function getProductById(id){
-    console.log(id)
+async function getProductById(productId){
+
     try {
         const {rows: [products]} = await client.query(`
             SELECT *
             FROM products
-            WHERE id=${id};
+            WHERE id=${productId};
         `)
+
         return products
     } catch (error) {
         console.error(error)
@@ -56,12 +57,13 @@ async function getProductById(id){
 
 async function getProductByCatagory(catagoryId){
     try {
-        const {rows} = await client.query(`
+        const {rows: results} = await client.query(`
             SELECT *
             FROM products
             WHERE "catagoryId"=${catagoryId};
         `)
-        return rows
+        console.log(results)
+        return results
     } catch (error) {
         console.error(error.detail)
     }
@@ -122,16 +124,17 @@ async function updateProduct(productid, {...fields}){
     
     }
 
-async function addProductToCart({productId, userId, total, current, shipTo}){
-    //
+async function createOrderDetail({productId, quantity, price}){
+    
     try {
-        const {rows} = await client.query(`
-           INSERT INTO "orderLine" ("productId", "userId", total, current, "shipTo")
-           VALUES ($1, $2, $3, $4, $5)
+        const {rows: [results]} = await client.query(`
+           INSERT INTO "orderDetails" ("productId", quantity, price)
+           VALUES ($1, $2, $3)
            RETURNING *;
-       `, [productId, userId, total, current, shipTo])
-        return rows
+       `, [productId, quantity, price])
+        return results
     } catch (error) {
+        console.log(error)
         console.error(error.detail)
     }
 }
@@ -155,6 +158,6 @@ module.exports = {
     getAllProducts,
     getProductByCatagory,
     getProductById,
-    addProductToCart,
+    createOrderDetail,
     createCatagory
 }
