@@ -1,41 +1,38 @@
-const client = require("./client")
+const client = require("./client");
 
+const { createUser, getAllUsers } = require("./users");
+const { createProduct, getProductById } = require("./products");
+const { list } = require("./seedProducts");
 
+const { createCatagory } = require("./catagories");
 
-const {createUser, getAllUsers} = require('./users')
-const {createProduct, getProductById} = require('./products')
-const {list} = require('./seedProducts')
-
-const {createCatagory} = require('./catagories')
-
-
-const {createReview} = require('./reviews')
+const { createReview } = require("./reviews");
 
 async function dropTables() {
-  console.log("Dropping All Tables...")
+  console.log("Dropping All Tables...");
   try {
     await client.query(`
-        
+
         DROP TABLE IF EXISTS "orderDetails";
         DROP TABLE IF EXISTS "orderLine";
         DROP TABLE IF EXISTS reviews;
-        
+
         DROP TABLE IF EXISTS products;
-        
+
         DROP TABLE IF EXISTS catagory;
         DROP TABLE IF EXISTS users;
-    `)
-    console.log("Flipped Tables")
+    `);
+    console.log("Flipped Tables");
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
 async function createTables() {
-  console.log("Starting to build tables...")
+  console.log("Starting to build tables...");
   // create all tables, in the correct order
-    try {
-      await client.query(`
+  try {
+    await client.query(`
       CREATE TABLE users(
         id SERIAL PRIMARY KEY,
         username VARCHAR(255) UNIQUE NOT NULL,
@@ -47,7 +44,7 @@ async function createTables() {
       CREATE TABLE catagory(
         "id" SERIAL PRIMARY KEY,
         "catName" VARCHAR(255) UNIQUE NOT NULL
-        
+
       );
       CREATE TABLE products(
         id SERIAL PRIMARY KEY,
@@ -80,160 +77,162 @@ async function createTables() {
         quantity INTEGER,
         price MONEY
       );
-      `)
-      console.log("Tables Created")
-    } catch (error) {
-      console.log(error)
-    }
+      `);
+    // Matt: You may want a unique constraint on
+    // ("orderId", "productId") to prevent one product
+    // from being added to an order twice
+
+    //Matt: If MONEY data type is coming back as a string in JS
+    // you may want to switch to a DECIMAL type, to make it easier to do math operations
+    console.log("Tables Created");
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-/* 
+/*
 Create initial data for table
 */
 
 async function createInitialUsers() {
-  console.log("Starting to create users...")
+  console.log("Starting to create users...");
   try {
     const usersToCreate = [
-        { username: "Will", 
+      {
+        username: "Will",
         password: "will123",
         email: "will@yahoo.com",
         address: "123 A St. Baton Rouge, LA",
-        isAdmin: false
-        },
-        { 
-        username: "Daniel", 
+        isAdmin: false,
+      },
+      {
+        username: "Daniel",
         password: "daniel123",
         email: "daniel@gmail.com",
         address: "456 B Ave. San Fransico, CA",
-        isAdmin: true
-        },
-        { 
-        username: "Brandon", 
+        isAdmin: true,
+      },
+      {
+        username: "Brandon",
         password: "brandon123",
         email: "brandon@aol.com",
         address: "789 Circle Sq. Cleveland, OH",
-        isAdmin: true
-        },
-        { 
-        username: "Cade", 
+        isAdmin: true,
+      },
+      {
+        username: "Cade",
         password: "cade123",
         email: "cade@yahoo.com",
         address: "1112  D Ct. Raleigh, NC",
-        isAdmin: true
-        },
-    ]
-    const users = await Promise.all(usersToCreate.map(createUser))
+        isAdmin: true,
+      },
+    ];
+    const users = await Promise.all(usersToCreate.map(createUser));
 
     // console.log("Users created:")
     // console.log(users)
-    console.log("Finished creating users!")
+    console.log("Finished creating users!");
   } catch (error) {
-    console.error("Error creating users!")
-    throw error
+    console.error("Error creating users!");
+    throw error;
   }
 }
 async function createInitialCatagory() {
   try {
-    console.log("Starting to create catagories...")
+    console.log("Starting to create catagories...");
 
     const catagoriesToCreate = [
-      { catName: "For Men"}, 
-      { catName: "For Women"},
-      { catName: "Outdoor"},
-      { catName: "Cheap"},
-      
-    ]
-    const catagories = await Promise.all(catagoriesToCreate.map(createCatagory))
+      { catName: "For Men" },
+      { catName: "For Women" },
+      { catName: "Outdoor" },
+      { catName: "Cheap" },
+    ];
+    const catagories = await Promise.all(
+      catagoriesToCreate.map(createCatagory)
+    );
 
     // console.log("activities created:")
     // console.log(activities)
 
-    console.log("Finished creating Catagories!")
+    console.log("Finished creating Catagories!");
   } catch (error) {
-    console.error("Error creating Catagories!")
-    throw error
+    console.error("Error creating Catagories!");
+    throw error;
   }
 }
 
 async function createInitialProducts() {
-  console.log("starting to create products...")
-// console.log(list())
-  const productsToCreate = list()
+  console.log("starting to create products...");
+  // console.log(list())
+  const productsToCreate = list();
 
   const products = await Promise.all(
     productsToCreate.map((products) => createProduct(products))
-  )
+  );
   // console.log("Products Created: ", products)
-  console.log("Finished creating products.")
+  console.log("Finished creating products.");
 }
 
 async function createInitialReviews() {
-  console.log("starting to create reviews...")
+  console.log("starting to create reviews...");
 
   const reviewToCreate = [
     {
       productId: 1,
       userId: 2,
-      title: 'Retread Works',
-      description: 'It really worked to retread my bald tires. I stopped sliding in the rain'
+      title: "Retread Works",
+      description:
+        "It really worked to retread my bald tires. I stopped sliding in the rain",
     },
     {
-        productId: 1,
-        userId: 3,
-        title: 'This is great',
-        description: 'I will never have to get another one ever again'
-    },
-    { 
-        productId: 2,
-        userId: 4,
-        title: 'Not that good',
-        description: 'This is one of the worst products i have ever used'
+      productId: 1,
+      userId: 3,
+      title: "This is great",
+      description: "I will never have to get another one ever again",
     },
     {
-        productId: 3,
-        userId: 1,
-        title: 'Price isnt the best',
-        description: 'It does everything I need it to i just wish it was a little cheaper'
+      productId: 2,
+      userId: 4,
+      title: "Not that good",
+      description: "This is one of the worst products i have ever used",
     },
-    
-  ]
-  const reviewscreated = await Promise.all(
-    reviewToCreate.map(createReview)
-  )
+    {
+      productId: 3,
+      userId: 1,
+      title: "Price isnt the best",
+      description:
+        "It does everything I need it to i just wish it was a little cheaper",
+    },
+  ];
+  const reviewscreated = await Promise.all(reviewToCreate.map(createReview));
 
   // console.log(reviewToCreate)
   // console.log("Review created: ", reviewcreated)
-  console.log("Finished creating reviews!")
+  console.log("Finished creating reviews!");
 }
-
 
 async function rebuildDB() {
   try {
-    client.connect()
-    await dropTables()
-    await createTables()
-    await createInitialUsers()
-    await createInitialCatagory()
-    await createInitialProducts()
-    await createInitialReviews()
+    client.connect();
+    await dropTables();
+    await createTables();
+    await createInitialUsers();
+    await createInitialCatagory();
+    await createInitialProducts();
+    await createInitialReviews();
 
-    
-    
-    console.log('testing area')
+    console.log("testing area");
     // console.log(await getAllProducts())
-    
-console.log('Rebuild Complete')
+
+    console.log("Rebuild Complete");
   } catch (error) {
-    console.log("Error during rebuildDB")
-    throw error
+    console.log("Error during rebuildDB");
+    throw error;
   }
 }
-
-
 
 module.exports = {
   rebuildDB,
   dropTables,
   createTables,
-}
+};

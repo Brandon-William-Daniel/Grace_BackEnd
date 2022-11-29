@@ -10,151 +10,176 @@
 
 const client = require("./client");
 
-async function createProduct({title, description, price, invQty, photo, catagoryId}){
-    try {
-        const {rows: [products]} = await client.query(`
+async function createProduct({
+  title,
+  description,
+  price,
+  invQty,
+  photo,
+  catagoryId,
+}) {
+  try {
+    const {
+      rows: [products],
+    } = await client.query(
+      `
             INSERT INTO products (title, description, price, "invQty", photo, "catagoryId")
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *;
-        `, [title, description, price, invQty, photo, catagoryId])
-        // console.log(products)
-        return products
-    } catch (error) {
-        console.error(error)
-    }
+        `,
+      [title, description, price, invQty, photo, catagoryId]
+    );
+    // console.log(products)
+    return products;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-async function createCatagory({name}){
-    try {
-        const {rows:[cat]} = await client.query(`
+// Matt: This function is also defined in categories.js
+async function createCatagory({ name }) {
+  try {
+    const {
+      rows: [cat],
+    } = await client.query(
+      `
             INSERT INTO catagory ("catName")
             VALUES ($1)
             RETURNING *;
-        `, [name])
-      
-        return cat
-    } catch (error) {
-        console.error(error)
-    }
+        `,
+      [name]
+    );
+
+    return cat;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-
-async function getProductById(id){
-    console.log(id)
-    try {
-        const {rows: [products]} = await client.query(`
+async function getProductById(id) {
+  console.log(id);
+  try {
+    // Matt: Use interpolated values here, WHERE id=$1
+    const {
+      rows: [products],
+    } = await client.query(`
             SELECT *
             FROM products
             WHERE id=${id};
-        `)
-        return products
-    } catch (error) {
-        console.error(error)
-    }
+        `);
+    return products;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-
-async function getProductByCatagory(catagoryId){
-    try {
-        const {rows} = await client.query(`
+async function getProductByCatagory(catagoryId) {
+  try {
+    // Matt: Use interpolated values here, WHERE "categoryId"=$1
+    const { rows } = await client.query(`
             SELECT *
             FROM products
             WHERE "catagoryId"=${catagoryId};
-        `)
-        return rows
-    } catch (error) {
-        console.error(error.detail)
-    }
+        `);
+    return rows;
+  } catch (error) {
+    console.error(error.detail);
+  }
 }
 
-async function getAllProducts(){
-    try {
-
-
-        const {rows} = await client.query(`
+async function getAllProducts() {
+  try {
+    const { rows } = await client.query(`
             SELECT *
             from products;
-        `)
-        return rows
-    } catch (error) {
-        console.error(error)
-    }
+        `);
+    return rows;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-async function destroyProduct(productId){
-    try {
-        const result = await client.query(`
+async function destroyProduct(productId) {
+  try {
+    // Matt: Use interpolated values here, WHERE id=$1
+    const result = await client.query(`
             DELETE FROM products
             WHERE id=${productId};
-        `)
-    } catch (error) {
-        console.error(error.detail)
-    }
+        `);
+  } catch (error) {
+    console.error(error.detail);
+  }
 }
 
+async function updateProduct(productid, { ...fields }) {
+  const setString = Object.keys(fields)
+    .map((key, index) => `"${key}"=$${index + 1}`)
+    .join(", ");
+  console.log("setString", setString);
+  // return if no fields
+  if (setString.length === 0) {
+    return;
+  }
 
-async function updateProduct(productid, {...fields}){
-    
-    const setString = Object.keys(fields).map(
-        (key, index) => `"${ key }"=$${ index + 1 }`
-      ).join(', ');
-    console.log('setString', setString)
-      // return if no fields
-      if (setString.length === 0) {
-    
-        return;
-      }
-    
-      try {
-       
-        const  {rows:[result]}  = await client.query(`
+  try {
+    const {
+      rows: [result],
+    } = await client.query(
+      `
           UPDATE products
           SET ${setString}
-          WHERE id=${ productid }
+          WHERE id=${productid}
           RETURNING *;
-        `, Object.values(fields));
-    
-        return result;
-      } catch (error) {
-        console.log(error)
-        throw error;
-      }
-    
-    }
+        `,
+      Object.values(fields)
+    );
 
-async function addProductToCart({productId, userId, total, current, shipTo}){
-    //
-    try {
-        const {rows} = await client.query(`
+    return result;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+async function addProductToCart({ productId, userId, total, current, shipTo }) {
+  //
+  try {
+    const { rows } = await client.query(
+      `
            INSERT INTO "orderLine" ("productId", "userId", total, current, "shipTo")
            VALUES ($1, $2, $3, $4, $5)
            RETURNING *;
-       `, [productId, userId, total, current, shipTo])
-        return rows
-    } catch (error) {
-        console.error(error.detail)
-    }
+       `,
+      [productId, userId, total, current, shipTo]
+    );
+    return rows;
+  } catch (error) {
+    console.error(error.detail);
+  }
 }
 
-async function buySingleProductNow({orderId, productId, quantity, price}){
-    try {
-        const result = await client.query(`
+async function buySingleProductNow({ orderId, productId, quantity, price }) {
+  try {
+    const result = await client.query(
+      `
            INSERT INTO "orderDetails" ( "orderId", "productId", quantity, price)
            VALUES ($1, $2, $3, $4)
            RETURNING *
-        `, [orderId, productId, quantity, price])
-    } catch (error) {
-        console.error(error.deatil)
-    }
+        `,
+      [orderId, productId, quantity, price]
+    );
+  } catch (error) {
+    console.error(error.deatil);
+  }
 }
 module.exports = {
-    createProduct,
-    buySingleProductNow,
-    updateProduct,
-    destroyProduct,
-    getAllProducts,
-    getProductByCatagory,
-    getProductById,
-    addProductToCart,
-    createCatagory
-}
+  createProduct,
+  buySingleProductNow,
+  updateProduct,
+  destroyProduct,
+  getAllProducts,
+  getProductByCatagory,
+  getProductById,
+  addProductToCart,
+  createCatagory,
+};
