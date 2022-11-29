@@ -54,9 +54,9 @@ router.use('/products', productsRouter);
 const catagoriesRouter = require('./catagories')
 router.use('/catagories', productsRouter);
 
-// // ROUTER: /api/orders
-// const ordersRouter = require('./orders');
-// router.use('/orders', ordersRouter);
+// ROUTER: /api/orders
+const ordersRouter = require('./orders');
+router.use('/orders', ordersRouter);
 
 // ROUTER: /api/routine_activities
 const reviewRouter = require('./reviews');
