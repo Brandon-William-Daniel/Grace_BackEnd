@@ -5,7 +5,7 @@
 
 const express = require('express')
 const ordersRouter = express.Router()
-const { getCartContents,addDetailToOrderLine, getDetailById } = require('../db/orders')
+const { getCartContents,addDetailToOrderLine, getDetailById, getCartById } = require('../db/orders')
 const { createOrderDetail, getProductById } = require ("../db/products")
 const { requireUser } = require('./utils')
 
@@ -37,10 +37,14 @@ ordersRouter.delete('/removefromcart/:orderid/:userid', requireUser, async (req,
 ordersRouter.post('/orderdetails/:productId', requireUser, async (req, res, next) => {
     const productId = req.params.productId
     const {quantity} = req.body
+    const userId = req.user.id
     const productData = {}
     try {
       productData.productId = productId
-      productData.userId = req.user.id
+      const cartId = await getCartById(userId)
+      console.log(cartId)
+      productData.cartId = cartId.cartId
+      productData.userId = userId
       const pid = await getProductById(productId)
       productData.price = pid.price * quantity
       productData.quantity = quantity
@@ -60,35 +64,35 @@ ordersRouter.post('/orderdetails/:productId', requireUser, async (req, res, next
     }
 })
 
-//POST /api/orders/:detailId/:cartId ADD DETAIL TO ORDER
+//POST /api/orders/:detailId/addtocart ADD DETAIL TO ORDER
 
-// ordersRouter.post('/addtocart/:detailId', requireUser, async (req, res, next) => {
-//     const detailId = req.params.detailId
-//     // const cartId = req.params.cartId
-//     // const {quantity} = req.body
-//     const cartData = {}
-//     try {
-//         const detail = await getDetailById(detailId)
-//         console.log(detail)
-//       cartData.detailId = detailId
-//     //   const pid = await getProductById(productId)
-//       cartData.price = detail.price //+ currentCartPrice
-//       cartData.userId = req.user.id
+ordersRouter.post('/addtocart/:detailId', requireUser, async (req, res, next) => {
+    const detailId = req.params.detailId
+    // const cartId = req.params.cartId
+    // const {quantity} = req.body
+    const cartData = {}
+    try {
+        const detail = await getCartById(req.user.id)
+        console.log(detail)
+      cartData.detailId = detailId
+    //   const pid = await getProductById(productId)
+      cartData.price = detail.price //+ currentCartPrice
+      cartData.userId = req.user.id
      
-//       const addToCart = await addDetailToOrderLine(cartData)
-//       console.log('addtocart', addToCart)
+      const addToCart = await addDetailToOrderLine(cartData)
+      console.log('addtocart', addToCart)
 
-//       if(addToCart){
-//         res.send(addToCart)
-//       }else{
-//         res.send({
-//             name: 'FailedToAddToCart',
-//             message: 'Something went wrong when adding to cart. Try again later'
-//         })
-//       }
-//     } catch (error) {
-//         console.error(error.detail)
-//     }
-// })
+      if(addToCart){
+        res.send(addToCart)
+      }else{
+        res.send({
+            name: 'FailedToAddToCart',
+            message: 'Something went wrong when adding to cart. Try again later'
+        })
+      }
+    } catch (error) {
+        console.error(error.detail)
+    }
+})
 
 module.exports = ordersRouter;

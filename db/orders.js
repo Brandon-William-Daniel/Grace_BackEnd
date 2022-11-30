@@ -6,18 +6,18 @@
 
 const client = require('./client')
 
-async function getCartContents() {
-    try {
-        const {rows: [order]} = await client.query(`
-        SELECT * 
-        FROM "orderLine"
-        WHERE active=true
-        `)
-        return order
-    } catch (error) {
-        console.error(error.detail)
-    }
-}
+// async function getCartContents() {
+//     try {
+//         const {rows: [order]} = await client.query(`
+//         SELECT * 
+//         FROM "orderLine"
+//         WHERE active=true
+//         `)
+//         return order
+//     } catch (error) {
+//         console.error(error.detail)
+//     }
+// }
 
 
 async function clearCart(orderId) {
@@ -135,6 +135,21 @@ async function joinDetailsToCart(userId){
     }
 }
 
+async function getCartById(userId){
+
+    try {
+        const {rows: [cart]} = await client.query(`
+            SELECT *
+            FROM "orderLine"
+            WHERE "cartId"=${userId} AND current = true;
+        `)
+
+        return cart
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 
 
 
@@ -143,11 +158,12 @@ module.exports = {
     updateOrder,
     removeItem,
     subtractFromQtyByProductId,
-    getCartContents,
+    // getCartContents,
     addDetailToOrderLine,
     getDetailById,
     createCart,
-    joinDetailsToCart
+    joinDetailsToCart,
+    getCartById
 }
 
 

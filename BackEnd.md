@@ -85,10 +85,7 @@ orders API -- DELETE orderDetails or PATCH orderLine -- removes one item   from 
             --PATCH orderLine removes an item from the cart
             
 
-SELECT *
-FROM "orderLine"
-INNER JOIN "orderDetails"
-WHERE "orderLine.userId" = "orderDetails.userId" AND "orderLine.current" = true; 
+
 
 
 
