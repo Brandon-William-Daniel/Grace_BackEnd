@@ -78,11 +78,12 @@ orders DB -- needs create order function
         -- getActiveCart
 
 orders API -- DELETE orderDetails or PATCH orderLine -- removes one item   from the cart
-            --GET get all orders for a user
-            --GET active cart for a user
-            --DELETE orderLine --user buys cart. Sets current cart to false and creates a new cart.
-            --PATCH orderDetails user changes quantity of an item in a cart.
-            --PATCH orderLine removes an item from the cart
+         --GET get all orders for a user
+        > --GET active cart for a user
+        > --POST add item to cart
+        > --PATCH orderDetails user changes quantity of an item in a cart. 
+        > --DELETE orderLine --user buys cart. Sets current cart to false and creates a new cart.
+        > --DELETE orderDetails removes an item from the cart
             
 
 

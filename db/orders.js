@@ -1,84 +1,41 @@
-// Orders -- Cade
-// clearCart
-// subtractFromQtyByProductId
-// removeItem
-// updateOrder
 
 const client = require('./client')
 
-// async function getCartContents() {
+
+async function updateDetails(did, uid, {quantity}, price) {
+   
+    try {
+      
+         const {rows: [reviews] } = await client.query(`
+         UPDATE "orderDetails"
+         SET quantity= $1, price= $2
+         WHERE "id"=${did} AND "userId"=${uid}
+         RETURNING *;
+         `, [quantity, price])
+
+         return reviews;
+       
+    } catch (error) {
+       console.log(error)
+    }
+}
+
+
+// async function addDetailToOrderLine ({detailId, userId, price}){
+//     console.log('detail to orderline')
 //     try {
 //         const {rows: [order]} = await client.query(`
-//         SELECT * 
-//         FROM "orderLine"
-//         WHERE active=true
-//         `)
+//             INSERT INTO "orderLine" ("detailId", "userId", total)
+//             VALUES ($1, $2, $3)
+//             RETURNING *;
+//         `, [detailId, userId, price])
+//         console.log('order', order)
 //         return order
 //     } catch (error) {
+//         console.log(error)
 //         console.error(error.detail)
 //     }
 // }
-
-
-async function clearCart(orderId) {
-    try {
-        const result = await client.query(`
-            DELETE * FROM order
-            WHERE id=${orderId};
-        `)
-    } catch (error) {
-        console.error(error.detail)
-    }
-}
-
-async function removeItem(orderId, userid){
-    try {
-        const result = await client.query(`
-            DELETE FROM order
-            WHERE "orderid=${orderId} and "userid=${userid};
-        `)
-        console.log('removed')
-    } catch (error) {
-        console.error(error.detail)
-    }
-}
-
-async function updateOrder(orderid, userid){
-    try {
-        const result = await client.query(`
-        UPDATE order
-        WHERE "orderid=${orderid} and "userid=${userid};
-        `)
-    } catch (error) {
-        onsole.error(error.detail)
-    }
-}
-
-async function subtractFromQtyByProductId(orderid, productid, qty ){
-    try {
-        const result = await client.query(`
-
-        `)
-    } catch (error) {
-        
-    }
-}
-
-async function addDetailToOrderLine ({detailId, userId, price}){
-    console.log('detail to orderline')
-    try {
-        const {rows: [order]} = await client.query(`
-            INSERT INTO "orderLine" ("detailId", "userId", total)
-            VALUES ($1, $2, $3)
-            RETURNING *;
-        `, [detailId, userId, price])
-        console.log('order', order)
-        return order
-    } catch (error) {
-        console.log(error)
-        console.error(error.detail)
-    }
-}
 
 async function getDetailById(id){
 
@@ -111,7 +68,7 @@ async function createCart(userId){
 
 async function joinDetailsToCart(userId){
     try {
-        console.log('here')
+
     const {rows:[cart]} = await client.query(`
         SELECT *
         FROM "orderLine"
@@ -150,26 +107,15 @@ async function getCartById(userId){
     }
 }
 
-
-
-
 module.exports = {
-    clearCart,
-    updateOrder,
-    removeItem,
-    subtractFromQtyByProductId,
+    // clearCart,
+    updateDetails,
+    // removeItem,
+    // subtractFromQtyByProductId,
     // getCartContents,
-    addDetailToOrderLine,
+    // addDetailToOrderLine,
     getDetailById,
     createCart,
     joinDetailsToCart,
     getCartById
 }
-
-
-
-// Cart----
-//    -- Detail1
-//    -- detail2
-//    -- detail3
-// Cart Total Price
