@@ -111,7 +111,7 @@ async function createCart(userId){
 
 async function joinDetailsToCart(userId){
     try {
-
+        console.log('here')
     const {rows:[cart]} = await client.query(`
         SELECT *
         FROM "orderLine"
