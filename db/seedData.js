@@ -91,28 +91,28 @@ async function createInitialUsers() {
           password: "will123",
           email: "will@yahoo.com",
           address: "123 A St. Baton Rouge, LA",
-          isAdmin: false,
+          isAdmin: false
         },
         { 
           username: "Daniel", 
           password: "daniel123",
           email: "daniel@gmail.com",
           address: "456 B Ave. San Fransico, CA",
-          isAdmin: true,
+          isAdmin: true
         },
         { 
           username: "Brandon", 
           password: "brandon123",
           email: "brandon@aol.com",
           address: "789 Circle Sq. Cleveland, OH",
-          isAdmin: true,
+          isAdmin: true
         },
         { 
           username: "Cade", 
           password: "cade123",
           email: "cade@yahoo.com",
           address: "1112  D Ct. Raleigh, NC",
-          isAdmin: true,
+          isAdmin: true
         },
     ]
     const users = await Promise.all(usersToCreate.map(createUser));
