@@ -135,7 +135,16 @@ async function createInitialCatagory() {
       { catName: "For Men" }, 
       { catName: "For Women" },
       { catName: "Outdoor" },
-      { catName: "Cheap" }, 
+      { catName: "Cheap" },
+      { catName: "Electronics" },
+      { catName: "Home goods" },
+      { catName: "Children" },
+      { catName: "Clothing"},
+      { catName: "Bathroom"},
+      { catName: "Gifts"},
+      { catName: "Holiday"},
+      { catName: "Kitchen Ware"},
+      { catName: "Pet Goods"}
     ];
     const catagories = await Promise.all(catagoriesToCreate.map(createCatagory));
 
