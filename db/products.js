@@ -124,14 +124,14 @@ async function updateProduct(productid, {...fields}){
     
     }
 
-async function createOrderDetail({productId, quantity, price}){
+async function createOrderDetail({productId, cartId, userId, quantity, price}){
     
     try {
         const {rows: [results]} = await client.query(`
-           INSERT INTO "orderDetails" ("productId", quantity, price)
-           VALUES ($1, $2, $3)
+           INSERT INTO "orderDetails" ("productId", "cartId", "userId", quantity, price)
+           VALUES ($1, $2, $3, $4, $5)
            RETURNING *;
-       `, [productId, quantity, price])
+       `, [productId, cartId, userId, quantity, price])
         return results
     } catch (error) {
         console.log(error)

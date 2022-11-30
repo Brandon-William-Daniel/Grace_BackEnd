@@ -1,14 +1,17 @@
 const client = require("./client");
 const {createUser, getAllUsers} = require("./users");
-const {createProduct, getProductById, addProductToCart} = require("./products");
+const {createProduct, getProductById, addProductToCart, createOrderDetail} = require("./products");
 const {list} = require("./seedProducts");
 const {createCatagory} = require("./catagories");
 const {createReview} = require("./reviews");
+const {joinDetailsToCart} = require("./orders")
+
 
 async function dropTables() {
   console.log("Dropping All Tables...");
   try {
     await client.query(`
+    
         DROP TABLE IF EXISTS "orderDetails";
         DROP TABLE IF EXISTS "orderLine";
         DROP TABLE IF EXISTS reviews;
@@ -58,14 +61,16 @@ async function createTables() {
         UNIQUE ("productId", "userId")
       );
       CREATE TABLE "orderLine"(
-        id SERIAL PRIMARY KEY,
+        "cartId" SERIAL PRIMARY KEY,
         "userId" INTEGER REFERENCES users(id),
-        total INTEGER,
+        total NUMERIC,
         current BOOLEAN DEFAULT true,
         "shipTo" TEXT
       );
       CREATE TABLE "orderDetails"(
         id SERIAL PRIMARY KEY,
+        "cartId" INTEGER REFERENCES "orderLine"("cartId"),
+        "userId" INTEGER REFERENCES users(id),
         "productId" INTEGER REFERENCES products(id),
         quantity INTEGER,
         price DECIMAL
@@ -185,6 +190,47 @@ async function createInitialReviews() {
   console.log("Finished creating reviews!");
 }
 
+async function createInitialDetails() {
+  console.log("starting to create details...");
+
+  const reviewToCreate = [
+    {
+      productId: 1,
+      cartId: 1,
+      userId: 1,
+      quantity: 2,
+      price: 32
+      
+    },
+    {
+      productId: 5,
+      cartId: 1,
+      userId: 1,
+      quantity: 3,
+      price: 12
+      
+    },
+    { 
+      productId: 2,
+      userId: 1,
+      quantity: 4,
+      price: 45
+      
+    },
+    {
+      productId: 3,
+      userId: 1,
+      quantity: 1,
+      price: 79
+      
+    },
+  ];
+  const reviewscreated = await Promise.all(reviewToCreate.map(createOrderDetail));
+
+  console.log("Finished creating details!");
+}
+
+
 async function rebuildDB() {
   try {
     client.connect();
@@ -194,9 +240,10 @@ async function rebuildDB() {
     await createInitialCatagory();
     await createInitialProducts();
     await createInitialReviews();
+    await createInitialDetails();
 console.log('testing area')
-
-    // await getProductById(1)
+    
+    await joinDetailsToCart(1)
 console.log('Testing Done')
 
   } catch (error) {
