@@ -72,9 +72,11 @@ productsRouter.delete('/deleteproduct/:productid', adminUser, async (req, res) =
     }
 })
 
-//PATCH /api/products/updateproduct/:productid
 
-productsRouter.patch('/updateproduct/:productid', adminUser, async (req, res) => {
+//PATCH /api/products/updateproduct/:productid 
+//setOrderDetails(Object.assign({}, orderDetails, update));
+productsRouter.patch('/updateproduct/:productid', requireUser, async (req, res) => {
+
     const {productid} = req.params
     const {title, description, price, invQty, catagoryId} = req.body
     const updateFields = {}

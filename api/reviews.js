@@ -36,7 +36,7 @@ reviewRouter.post('/:productId/newreview', requireUser, async (req, res, next) =
         reviewData.productId = req.params.productId
         reviewData.userId = req.user.id
         reviewData.title = title
-        reviewData.review = description
+        reviewData.description = description
         const createdReview = await createReview(reviewData)
         if(createdReview){
             res.send({createdReview})

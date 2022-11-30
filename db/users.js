@@ -7,6 +7,7 @@
 
 const client = require("./client");
 const  bcrypt  = require("bcrypt");
+const { createCart } = require("./orders");
 // const { getAllRoutinesByUser } = require("./routines");
 
 
@@ -21,7 +22,8 @@ async function createUser( {username, password, email, address, isAdmin}) {
           RETURNING id, username, email, address, "isAdmin"; 
       `,[username, hashedPassword, email, address, isAdmin])
     //  console.log(users)
-
+    const userId = users.id
+    await createCart(userId)
       return users
     }catch(error){
       console.log(error)
