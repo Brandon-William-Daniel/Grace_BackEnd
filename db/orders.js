@@ -10,7 +10,7 @@ async function getCartContents(orderid) {
     try {
         const {rows: [order]} = await client.query(`
         SELECT * 
-        FROM order
+        FROM "orderLine"
         WHERE id=${orderid}
         `)
         return order

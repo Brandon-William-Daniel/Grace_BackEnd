@@ -1,6 +1,6 @@
 const client = require("./client");
 const {createUser, getAllUsers} = require("./users");
-const {createProduct, getProductById} = require("./products");
+const {createProduct, getProductById, addProductToCart} = require("./products");
 const {list} = require("./seedProducts");
 const {createCatagory} = require("./catagories");
 const {createReview} = require("./reviews");
@@ -44,7 +44,7 @@ async function createTables() {
         id SERIAL PRIMARY KEY,
         title VARCHAR(255),
         description TEXT,
-        price MONEY NOT NULL,
+        price DECIMAL NOT NULL,
         "invQty" INTEGER NOT NULL,
         photo TEXT,
         "catagoryId" INTEGER REFERENCES catagory(id),
@@ -59,17 +59,16 @@ async function createTables() {
       );
       CREATE TABLE "orderLine"(
         id SERIAL PRIMARY KEY,
-        "productId" INTEGER REFERENCES products(id),
         "userId" INTEGER REFERENCES users(id),
         total INTEGER,
         current BOOLEAN DEFAULT true,
         "shipTo" TEXT
       );
       CREATE TABLE "orderDetails"(
-        "orderId" INTEGER REFERENCES "orderLine"(id),
+        id SERIAL PRIMARY KEY,
         "productId" INTEGER REFERENCES products(id),
         quantity INTEGER,
-        price MONEY
+        price DECIMAL
       );
       `)
       console.log("Tables Created");
@@ -195,6 +194,11 @@ async function rebuildDB() {
     await createInitialCatagory();
     await createInitialProducts();
     await createInitialReviews();
+console.log('testing area')
+
+    // await getProductById(1)
+console.log('Testing Done')
+
   } catch (error) {
     console.log("Error during rebuildDB");
     throw error
