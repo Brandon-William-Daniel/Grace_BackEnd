@@ -9,7 +9,7 @@ function requireUser(req, res, next){
 }
 
 function adminUser(req, res, next){
-    if(!req.user.isAdmin && !req.user){
+    if(!req.user.isAdmin){
         next({
             name: "MissingAdminError",
             message: "You must be an admin to use this feature"
