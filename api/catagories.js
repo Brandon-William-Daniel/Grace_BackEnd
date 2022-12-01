@@ -1,6 +1,6 @@
 const express = require('express')
 const catagoriesRouter = express.Router()
-const {createCatagory} = require('../db/catagories')
+const {createCatagory, getAllCatagories} = require('../db/catagories')
 const {requireUser, adminUser} = require('./utils')
 
 //POST /api/catagories/newcatagory
@@ -24,4 +24,14 @@ catagoriesRouter.post('/newcatagory', adminUser,  async (req, res) => {
     }
 })
 
+catagoriesRouter.get('/', async (req, res) => {
+    try {
+        const cat = await getAllCatagories()
+        res.send({
+            cat
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
 module.exports = catagoriesRouter;
