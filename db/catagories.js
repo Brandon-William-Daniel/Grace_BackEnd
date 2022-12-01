@@ -3,7 +3,7 @@ const client = require('./client')
 async function getAllCatagories(){
     try {
         const {rows} = await client.query(`
-            SELECT "catName"
+            SELECT *
             from catagory;
         `)
         return rows
