@@ -52,7 +52,7 @@ const productsRouter = require('./products');
 router.use('/products', productsRouter);
 
 const catagoriesRouter = require('./catagories')
-router.use('/catagories', productsRouter);
+router.use('/catagories', catagoriesRouter);
 
 // ROUTER: /api/orders
 const ordersRouter = require('./orders');
