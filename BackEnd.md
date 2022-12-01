@@ -71,11 +71,11 @@ requireAdmin function -- Daniel
     
 
 seedData
-    --Create user function needs create intial order function
+    >--Create user function needs create intial order function
 orders DB -- needs create order function
-        -- needs orderDetails join to orderLine function
+        >-- needs orderDetails join to orderLine function
         -- getAllCart
-        -- getActiveCart
+        >-- getActiveCart
 
 orders API -- DELETE orderDetails or PATCH orderLine -- removes one item   from the cart
          --GET get all orders for a user

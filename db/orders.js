@@ -92,6 +92,34 @@ async function joinDetailsToCart(userId){
     }
 }
 
+async function pastCart(userId){
+    try {
+
+    const {rows:[cart]} = await client.query(`
+        SELECT *
+        FROM "orderLine"
+        WHERE "userId" = $1
+        AND "orderLine".current = false;
+        `, [userId])
+    if (!cart){
+        return null
+    }
+    const {rows: products} = await client.query(`
+        SELECT products.*, "orderDetails".price, "orderDetails".quantity
+        FROM "orderDetails"
+        LEFT JOIN "products"
+        ON "orderDetails"."productId" = products.id 
+        WHERE "orderDetails"."cartId" = $1;
+        `, [cart.cartId])
+    
+        cart.products=products
+
+        return cart
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 async function getCartById(userId){
 
     try {
@@ -117,5 +145,6 @@ module.exports = {
     getDetailById,
     createCart,
     joinDetailsToCart,
-    getCartById
+    getCartById,
+    pastCart
 }

@@ -1,17 +1,32 @@
 
 const express = require('express')
 const ordersRouter = express.Router()
-const { joinDetailsToCart,addDetailToOrderLine, getDetailById, getCartById,updateDetails } = require('../db/orders')
+const { joinDetailsToCart,addDetailToOrderLine, getDetailById, getCartById,updateDetails, pastCart } = require('../db/orders')
 const { createOrderDetail, getProductById } = require ("../db/products")
 const { requireUser } = require('./utils')
 
 //GET /api/orders/viewcart
 
-ordersRouter.get('/viewcart', async (req, res, next) => {
+ordersRouter.get('/viewcart', requireUser, async (req, res, next) => {
     const userId = req.user.id
-    console.log(userId)
+   
     try {
         const cart = await joinDetailsToCart(userId);
+        res.send({
+            cart
+        })
+    } catch (error) {
+        console.error(error.detail)
+    }
+})
+
+//GET /api/orders/pastcart
+
+ordersRouter.get('/pastcart', requireUser, async (req, res, next) => {
+    const userId = 1 //req.user.id
+    
+    try {
+        const cart = await pastCart(userId);
         res.send({
             cart
         })
