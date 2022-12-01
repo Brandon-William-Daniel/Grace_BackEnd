@@ -131,10 +131,8 @@ productsRouter.get("/:productId", async (req, res) => {
 
   productsRouter.get(`/catagory/:catId`, async (req, res) => {
     const {catId} = req.params
-    console.log(catId)
     try {
         const products = await getProductByCatagory(catId)
-        console.log(products)
         res.send({
             products
         })
