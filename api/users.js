@@ -100,7 +100,7 @@ usersRouter.get('/me', async (req, res, next) => {
     console.log(username)
     try {
     const user = await getUserByUsername(username)
-    console.log('/me', user)
+   
    res.send(user)
     } catch ({ name, message }) {
       next({ name, message })
