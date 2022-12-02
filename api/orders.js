@@ -106,8 +106,10 @@ ordersRouter.delete('/detail/:detailId', requireUser, async (req, res, next) => 
     
     try {
         const removefromcart = await deleteDetails(detailId, userId)
+
         const total = await updateTotal(userId)
         res.send('Removed')
+
     } catch (error) {
         console.log(error)
     }

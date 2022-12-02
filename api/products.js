@@ -1,7 +1,7 @@
 
 const express = require('express');
 const productsRouter = express.Router();
-const {getAllProducts, createProduct, destroyProduct, updateProduct, getProductById} = require('../db/products')
+const {getAllProducts, createProduct, destroyProduct, updateProduct, getProductById, getProductByCatagory} = require('../db/products')
 const {requireUser, adminUser} = require('./utils');
 
 // GET /api/products/
@@ -116,6 +116,18 @@ productsRouter.get("/:productId", async (req, res) => {
       } catch (error) {
           console.error(error.detail)
       }
+  })
+
+  productsRouter.get(`/catagory/:catId`, async (req, res) => {
+    const {catId} = req.params
+    try {
+        const products = await getProductByCatagory(catId)
+        res.send({
+            products
+        })
+    } catch (error) {
+        console.log(error)
+    }
   })
 
 

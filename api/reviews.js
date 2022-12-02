@@ -60,7 +60,10 @@ reviewRouter.delete('/deletereview/:productId/:userId', requireUser, async (req,
     try {
         const deletedReview = await deleteReview(productId, userId)
         // const allReviews = await getAllReviewsByProduct(productId);
-        res.send('Succesfully Deleted')
+        res.send({
+            name: 'FailedToDelete',
+            message: "Unable to delete review"
+        })
     } catch (error) {
         console.log(error)
     }
