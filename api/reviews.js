@@ -72,7 +72,6 @@ reviewRouter.patch('/updateReview/:productId/:userId', requireUser, async (req, 
     const productId = req.params.productId;
     const userId = req.params.userId;
     const {title, description} = req.body
-console.log(userId)
     const updateFields = {};
 
     if (title) {
