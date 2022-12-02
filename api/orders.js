@@ -117,7 +117,9 @@ ordersRouter.delete('/cart/:cartId', requireUser, async (req, res, next) => {
     const shipTo = req.user.address
     try {
         const purchase = await purchaseCart(detailId, userId);
+        if(purchase){
         const create = await createCart(userId, 0, shipTo)
+        }
         res.send('Purchase Complete')
     } catch (error) {
         console.log(error)
