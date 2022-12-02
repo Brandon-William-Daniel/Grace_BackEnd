@@ -1,19 +1,8 @@
-// Products -- Daniel
-// POST -- /createProduct Only Admin
-// GET -- / Get active products
-// DELETE -- /setInactive Set post to active
-// PATCH --/updateProduct Update Current Product
 
 const express = require('express');
 const productsRouter = express.Router();
 const {getAllProducts, createProduct, destroyProduct, updateProduct, getProductById, getProductByCatagory} = require('../db/products')
 const {requireUser, adminUser} = require('./utils');
-
-// productsRouter.use((req, res, next) => {
-//     console.log('a request is being made to products')
-//     next();
-// })
-
 
 // GET /api/products/
 
@@ -74,7 +63,7 @@ productsRouter.delete('/deleteproduct/:productid', adminUser, async (req, res) =
 
 
 //PATCH /api/products/updateproduct/:productid 
-//setOrderDetails(Object.assign({}, orderDetails, update));
+
 productsRouter.patch('/updateproduct/:productid', requireUser, async (req, res) => {
 
     const {productid} = req.params
