@@ -221,6 +221,7 @@ async function createInitialDetails() {
     },
     { 
       productId: 2,
+      cartId: 1,
       userId: 1,
       quantity: 4,
       price: 45
@@ -228,6 +229,7 @@ async function createInitialDetails() {
     },
     {
       productId: 3,
+      cartId: 1,
       userId: 1,
       quantity: 1,
       price: 79

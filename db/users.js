@@ -23,7 +23,7 @@ async function createUser( {username, password, email, address, isAdmin}) {
       `,[username, hashedPassword, email, address, isAdmin])
     //  console.log(users)
     const userId = users.id
-    await createCart(userId)
+    await createCart(userId, 0, address)
       return users
     }catch(error){
       console.log(error)

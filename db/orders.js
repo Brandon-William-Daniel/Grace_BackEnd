@@ -32,23 +32,6 @@ async function deleteDetails(detailId, userId) {
     }
 }
 
-
-// async function addDetailToOrderLine ({detailId, userId, price}){
-//     console.log('detail to orderline')
-//     try {
-//         const {rows: [order]} = await client.query(`
-//             INSERT INTO "orderLine" ("detailId", "userId", total)
-//             VALUES ($1, $2, $3)
-//             RETURNING *;
-//         `, [detailId, userId, price])
-//         console.log('order', order)
-//         return order
-//     } catch (error) {
-//         console.log(error)
-//         console.error(error.detail)
-//     }
-// }
-
 async function getDetailById(id){
 
     try {
@@ -64,13 +47,13 @@ async function getDetailById(id){
     }
 }
 
-async function createCart(userId){
+async function createCart(userId, total, shipTo){
     try {
         const {rows:[cat]} = await client.query(`
-            INSERT INTO "orderLine" ("userId")
-            VALUES ($1)
+            INSERT INTO "orderLine" ("userId", total, "shipTo")
+            VALUES ($1, $2, $3)
             RETURNING *;
-        `, [userId])
+        `, [userId, total, shipTo])
       
         return cat
     } catch (error) {
@@ -147,6 +130,20 @@ async function getCartById(userId){
     }
 }
 
+async function purchaseCart(cartId, userId) {
+    try {
+       const results = await client.query(`
+        UPDATE "orderLine"
+        SET current = false
+        WHERE "cartId"=${cartId} and "userId"=${userId}
+        RETURNING * ;
+        `)
+       console.log('deleted')
+    } catch (error) {
+       console.log(error)
+    }
+}
+
 module.exports = {
     // clearCart,
     updateDetails,
@@ -159,5 +156,6 @@ module.exports = {
     joinDetailsToCart,
     getCartById,
     pastCart,
-    deleteDetails
+    deleteDetails,
+    purchaseCart
 }

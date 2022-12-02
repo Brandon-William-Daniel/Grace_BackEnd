@@ -1,7 +1,7 @@
 
 const express = require('express')
 const ordersRouter = express.Router()
-const { joinDetailsToCart,addDetailToOrderLine, getDetailById, getCartById,updateDetails, pastCart, deleteDetails } = require('../db/orders')
+const { joinDetailsToCart,addDetailToOrderLine, getDetailById, getCartById,updateDetails, pastCart, deleteDetails, purchaseCart, createCart } = require('../db/orders')
 const { createOrderDetail, getProductById } = require ("../db/products")
 const { requireUser } = require('./utils')
 
@@ -98,7 +98,7 @@ ordersRouter.patch('/update/:detailId', requireUser, async (req, res, next) => {
 })
 
 // DELETE /api/orders/:productId orderDetails removes an item from the cart
-ordersRouter.delete('/:detailId', requireUser, async (req, res, next) => {
+ordersRouter.delete('/detail/:detailId', requireUser, async (req, res, next) => {
     const detailId = req.params.detailId
     const userId = req.user.id
     try {
@@ -111,42 +111,22 @@ ordersRouter.delete('/:detailId', requireUser, async (req, res, next) => {
 
 // DELETE orderLine sets current to false and creates a new cart
 
+ordersRouter.delete('/cart/:cartId', requireUser, async (req, res, next) => {
+    const detailId = req.params.cartId
+    const userId = req.user.id
+    const shipTo = req.user.address
+    try {
+        const purchase = await purchaseCart(detailId, userId);
+        const create = await createCart(userId, 0, shipTo)
+        res.send('Purchase Complete')
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 
+//PATCH orderLine update address
 
 
-
-
-
-//POST /api/orders/:detailId/addtocart ADD DETAIL TO ORDER
-
-// ordersRouter.post('/addtocart/:detailId/addtocart', requireUser, async (req, res, next) => {
-//     const detailId = req.params.detailId
-//     // const cartId = req.params.cartId
-//     // const {quantity} = req.body
-//     const cartData = {}
-//     try {
-//         const detail = await getCartById(req.user.id)
-//         console.log(detail)
-//       cartData.detailId = detailId
-//     //   const pid = await getProductById(productId)
-//       cartData.price = detail.price //+ currentCartPrice
-//       cartData.userId = req.user.id
-     
-//       const addToCart = await addDetailToOrderLine(cartData)
-//       console.log('addtocart', addToCart)
-
-//       if(addToCart){
-//         res.send(addToCart)
-//       }else{
-//         res.send({
-//             name: 'FailedToAddToCart',
-//             message: 'Something went wrong when adding to cart. Try again later'
-//         })
-//       }
-//     } catch (error) {
-//         console.error(error.detail)
-//     }
-// })
 
 module.exports = ordersRouter;
