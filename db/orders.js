@@ -24,7 +24,11 @@ async function deleteDetails(detailId, userId) {
     try {
        const results = await client.query(`
        DELETE FROM "orderDetails"
+       WHERE "id"=${detailId} and "userId"=${userId}
+       RETURNING * ;
+
        WHERE "productId"=${detailId} and "userId"=${userId};
+
        `)
        console.log('deleted')
     } catch (error) {
@@ -158,6 +162,25 @@ async function changeCartAddress(cartId, userId, address) {
     }
 }
 
+async function updateTotal(userId){
+    const cart = await joinDetailsToCart(userId)
+    const products = cart.products
+    // console.log('products', products)
+    let total = 0
+    products.map(el => total =+ el.price + total)
+    try {
+        const {rows:[updateTotal]} = await client.query(`
+            UPDATE "orderLine"
+            SET total = $1
+            WHERE "cartId" = ${cart.cartId} and "userId" = ${userId}
+            RETURNING *;
+        `, [total])
+      
+        return updateTotal
+    } catch (error) {
+        console.error(error)
+    }
+}
 module.exports = {
     // clearCart,
     updateDetails,
@@ -172,5 +195,6 @@ module.exports = {
     pastCart,
     deleteDetails,
     purchaseCart,
-    changeCartAddress
+    changeCartAddress,
+    updateTotal
 }

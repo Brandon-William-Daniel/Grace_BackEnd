@@ -43,7 +43,7 @@ async function updateReview(pid, uid, {...fields}) {
 
      try {
         if (setString.length > 0) {
-          const {rows: [reviews] } = await client.query(`
+          const {rows: [reviews]}  = await client.query(`
           UPDATE reviews
           SET ${setString}
           WHERE "productId"=${pid} AND "userId"=${uid}

@@ -1,7 +1,7 @@
 
 const express = require('express')
 const ordersRouter = express.Router()
-const { joinDetailsToCart,addDetailToOrderLine, getDetailById, getCartById,updateDetails, pastCart, deleteDetails, purchaseCart, createCart, changeCartAddress } = require('../db/orders')
+const { joinDetailsToCart,addDetailToOrderLine, getDetailById, getCartById,updateDetails, pastCart, deleteDetails, purchaseCart, createCart, changeCartAddress, updateTotal } = require('../db/orders')
 const { createOrderDetail, getProductById } = require ("../db/products")
 const { requireUser } = require('./utils')
 
@@ -53,6 +53,7 @@ ordersRouter.post('/orderdetails/:productId', requireUser, async (req, res, next
       productData.quantity = quantity
      
       const addToCart = await createOrderDetail(productData)
+      const total = await updateTotal(userId)
 
       if(addToCart){
         res.send(addToCart)
@@ -82,6 +83,7 @@ ordersRouter.patch('/update/:detailId', requireUser, async (req, res, next) => {
     try {
         if(userId == req.user.id){
         const updatedReview = await updateDetails(detailId, userId, {quantity}, price)
+        const total = await updateTotal(userId)
         res.send({
             updatedReview
         })
@@ -97,13 +99,17 @@ ordersRouter.patch('/update/:detailId', requireUser, async (req, res, next) => {
     }
 })
 
-// DELETE /api/orders/:productId orderDetails removes an item from the cart
+// DELETE /api/orders/:detailId orderDetails removes an item from the cart
 ordersRouter.delete('/detail/:detailId', requireUser, async (req, res, next) => {
     const detailId = req.params.detailId
     const userId = req.user.id
+    
     try {
         const removefromcart = await deleteDetails(detailId, userId)
-        res.send('removed')
+
+        const total = await updateTotal(userId)
+        res.send('Removed')
+
     } catch (error) {
         console.log(error)
     }
@@ -116,6 +122,7 @@ ordersRouter.delete('/cart/:cartId', requireUser, async (req, res, next) => {
     const userId = req.user.id
     const shipTo = req.user.address
     try {
+        const total = await updateTotal(userId)
         const purchase = await purchaseCart(detailId, userId);
         const create = await createCart(userId, 0, shipTo)
         res.send('Purchase Complete')
@@ -151,8 +158,6 @@ ordersRouter.patch('/updateAddress/:cartId', requireUser, async (req, res, next)
         console.log(error)
     }
 })
-
-
 
 
 module.exports = ordersRouter;
