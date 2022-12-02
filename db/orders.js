@@ -115,13 +115,13 @@ async function pastCart(userId){
     }
 }
 
-async function getCartById(userId){
+async function getCartById(cartId){
 
     try {
         const {rows: [cart]} = await client.query(`
             SELECT *
             FROM "orderLine"
-            WHERE "cartId"=${userId} AND current = true;
+            WHERE "cartId"=${cartId} AND current = true;
         `)
 
         return cart
@@ -144,6 +144,20 @@ async function purchaseCart(cartId, userId) {
     }
 }
 
+async function changeCartAddress(cartId, userId, address) {
+    try {
+       const {rows: [results]} = await client.query(`
+        UPDATE "orderLine"
+        SET "shipTo" = $1
+        WHERE "cartId"=${cartId} and "userId"=${userId}
+        RETURNING * ;
+        `,[address])
+       return results
+    } catch (error) {
+       console.log(error)
+    }
+}
+
 module.exports = {
     // clearCart,
     updateDetails,
@@ -157,5 +171,6 @@ module.exports = {
     getCartById,
     pastCart,
     deleteDetails,
-    purchaseCart
+    purchaseCart,
+    changeCartAddress
 }
