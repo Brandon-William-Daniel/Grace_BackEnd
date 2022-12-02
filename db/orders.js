@@ -20,6 +20,18 @@ async function updateDetails(did, uid, {quantity}, price) {
     }
 }
 
+async function deleteDetails(detailId, userId) {
+    try {
+       const results = await client.query(`
+       DELETE FROM "orderDetails"
+       WHERE "id"=${detailId} and "userId"=${userId};
+       `)
+       console.log('deleted')
+    } catch (error) {
+       console.log(error)
+    }
+}
+
 
 // async function addDetailToOrderLine ({detailId, userId, price}){
 //     console.log('detail to orderline')
@@ -146,5 +158,6 @@ module.exports = {
     createCart,
     joinDetailsToCart,
     getCartById,
-    pastCart
+    pastCart,
+    deleteDetails
 }

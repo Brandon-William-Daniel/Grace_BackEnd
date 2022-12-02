@@ -1,7 +1,7 @@
 
 const express = require('express')
 const ordersRouter = express.Router()
-const { joinDetailsToCart,addDetailToOrderLine, getDetailById, getCartById,updateDetails, pastCart } = require('../db/orders')
+const { joinDetailsToCart,addDetailToOrderLine, getDetailById, getCartById,updateDetails, pastCart, deleteDetails } = require('../db/orders')
 const { createOrderDetail, getProductById } = require ("../db/products")
 const { requireUser } = require('./utils')
 
@@ -97,21 +97,22 @@ ordersRouter.patch('/update/:detailId', requireUser, async (req, res, next) => {
     }
 })
 
-// DELETE orderDetails removes an item from the cart
-
-// DELETE orderLine sets current to false and creates a new cart
-
-// current set to false create a new cart for that user. createCartFunction
-ordersRouter.delete('/removefromcart/:orderid/:userid', requireUser, async (req, res, next) => {
-    const orderid = req.params.orderid
-    const userid = req.params.userid
+// DELETE /api/orders/:productId orderDetails removes an item from the cart
+ordersRouter.delete('/:detailId', requireUser, async (req, res, next) => {
+    const detailId = req.params.detailId
+    const userId = req.user.id
     try {
-        const removefromcart = await removefromcart(orderid, userid)
+        const removefromcart = await deleteDetails(detailId, userId)
         res.send('Removed')
     } catch (error) {
         console.log(error)
     }
 })
+
+// DELETE orderLine sets current to false and creates a new cart
+
+
+
 
 
 
