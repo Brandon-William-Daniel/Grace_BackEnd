@@ -1,7 +1,7 @@
 
 const express = require('express')
 const ordersRouter = express.Router()
-const { joinDetailsToCart,addDetailToOrderLine, getDetailById, getCartById,updateDetails, pastCart, deleteDetails, purchaseCart, createCart } = require('../db/orders')
+const { joinDetailsToCart,addDetailToOrderLine, getDetailById, getCartById,updateDetails, pastCart, deleteDetails, purchaseCart, createCart, changeCartAddress } = require('../db/orders')
 const { createOrderDetail, getProductById } = require ("../db/products")
 const { requireUser } = require('./utils')
 
@@ -109,7 +109,7 @@ ordersRouter.delete('/detail/:detailId', requireUser, async (req, res, next) => 
     }
 })
 
-// DELETE orderLine sets current to false and creates a new cart
+// DELETE /cart/:cartId orderLine sets current to false and creates a new cart
 
 ordersRouter.delete('/cart/:cartId', requireUser, async (req, res, next) => {
     const detailId = req.params.cartId
@@ -125,7 +125,33 @@ ordersRouter.delete('/cart/:cartId', requireUser, async (req, res, next) => {
 })
 
 
-//PATCH orderLine update address
+//PATCH /updateAddress/:cartId orderLine update address
+
+ordersRouter.patch('/updateAddress/:cartId', requireUser, async (req, res, next) => {
+    const cartId = req.params.cartId;
+    const {address} = req.body
+    const cartById = await getCartById(cartId)
+    const userId = cartById.userId
+    console.log('userId', userId)
+    console.log(req.user.id)
+    try {
+        if(userId == req.user.id){
+        const updatedReview = await changeCartAddress(cartId, userId, address)
+        res.send({
+            updatedReview
+        })
+        }else{
+            next({
+                name: 'Unauthorized User',
+                message: 'You cannont update cart that is not yours'
+            })
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 
 
 
