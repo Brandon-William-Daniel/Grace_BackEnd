@@ -197,12 +197,8 @@ async function updateTotal(userId){
     }
 }
 module.exports = {
-    // clearCart,
+
     updateDetails,
-    // removeItem,
-    // subtractFromQtyByProductId,
-    // getCartContents,
-    // addDetailToOrderLine,
     getDetailById,
     createCart,
     joinDetailsToCart,
