@@ -26,6 +26,7 @@ ordersRouter.get('/viewcart', requireUser, async (req, res, next) => {
             cart
         })
     } catch (error) {
+        console.log(error)
         console.error(error.detail)
     }
 })
@@ -41,6 +42,7 @@ ordersRouter.get('/pastcart', requireUser, async (req, res, next) => {
             cart
     })
     } catch (error) {
+
         console.error(error.detail)
     }
 })
@@ -55,8 +57,10 @@ ordersRouter.post('/orderdetails/:productId', requireUser, async (req, res, next
     const productData = {}
     try {
       productData.productId = productId
-      const cartId = await getCartByUserId(userId)
-    //   console.log(cartId)
+    //   console.log(productId)
+      const cartId = await getCartById(userId)
+    //   console.log(userId)
+      console.log(cartId)
       productData.cartId = cartId.cartId
       productData.userId = userId
       const pid = await getProductById(productId)
@@ -75,6 +79,7 @@ ordersRouter.post('/orderdetails/:productId', requireUser, async (req, res, next
         })
       }
     } catch (error) {
+        console.log(error)
         console.error(error.detail)
     }
 })
@@ -135,9 +140,15 @@ ordersRouter.delete('/cart/:cartId', requireUser, async (req, res, next) => {
     console.log(req.user)
     try {
         const total = await updateTotal(userId)
-        const purchase = await purchaseCart(detailId, userId)
+
+        const purchase = await purchaseCart(detailId, userId);
+        console.log('th', purchase)
+
         const create = await createCart(userId, 0, shipTo)
+        console.log('new', create)
+        if(create){
         res.send('Purchase Complete')
+        }
     } catch (error) {
         console.log(error)
     }
