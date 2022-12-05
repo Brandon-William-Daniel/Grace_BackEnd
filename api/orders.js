@@ -1,7 +1,17 @@
 
 const express = require('express')
 const ordersRouter = express.Router()
-const { joinDetailsToCart,addDetailToOrderLine, getDetailById, getCartById,updateDetails, pastCart, deleteDetails, purchaseCart, createCart, changeCartAddress, updateTotal } = require('../db/orders')
+const { joinDetailsToCart, 
+    getDetailById, 
+    getCartById, 
+    updateDetails, 
+    pastCart, 
+    deleteDetails, 
+    purchaseCart, 
+    createCart, 
+    changeCartAddress, 
+    updateTotal, 
+    getCartByUserId } = require('../db/orders')
 const { createOrderDetail, getProductById } = require ("../db/products")
 const { requireUser } = require('./utils')
 
@@ -41,10 +51,11 @@ ordersRouter.post('/orderdetails/:productId', requireUser, async (req, res, next
     const productId = req.params.productId
     const {quantity} = req.body
     const userId = req.user.id
+    // console.log(userId)
     const productData = {}
     try {
       productData.productId = productId
-      const cartId = await getCartById(userId)
+      const cartId = await getCartByUserId(userId)
     //   console.log(cartId)
       productData.cartId = cartId.cartId
       productData.userId = userId
@@ -139,8 +150,7 @@ ordersRouter.patch('/updateAddress/:cartId', requireUser, async (req, res, next)
     const {address} = req.body
     const cartById = await getCartById(cartId)
     const userId = cartById.userId
-    console.log('userId', userId)
-    console.log(req.user.id)
+
     try {
         if(userId == req.user.id){
         const updatedReview = await changeCartAddress(cartId, userId, address)

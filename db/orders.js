@@ -134,6 +134,21 @@ async function getCartById(cartId){
     }
 }
 
+async function getCartByUserId(userId){
+
+    try {
+        const {rows: [cart]} = await client.query(`
+            SELECT *
+            FROM "orderLine"
+            WHERE "userId"=${userId} AND current = true;
+        `)
+
+        return cart
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 async function purchaseCart(cartId, userId) {
     try {
        const results = await client.query(`
@@ -196,5 +211,6 @@ module.exports = {
     deleteDetails,
     purchaseCart,
     changeCartAddress,
-    updateTotal
+    updateTotal,
+    getCartByUserId
 }
