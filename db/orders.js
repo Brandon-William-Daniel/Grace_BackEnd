@@ -125,11 +125,12 @@ async function getCartById(cartId){
         const {rows: [cart]} = await client.query(`
             SELECT *
             FROM "orderLine"
-            WHERE "cartId"=${cartId} AND current = true;
+            WHERE "userId"=${cartId} AND current = true;
         `)
 
         return cart
     } catch (error) {
+        console.log(error)
         console.error(error)
     }
 }
