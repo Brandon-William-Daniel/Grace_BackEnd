@@ -94,7 +94,7 @@ async function joinDetailsToCart(userId){
 async function pastCart(userId){
     try {
 
-    const {rows:[cart]} = await client.query(`
+    const {rows:{cart}} = await client.query(`
         SELECT *
         FROM "orderLine"
         WHERE "userId" = $1
@@ -114,6 +114,7 @@ async function pastCart(userId){
         cart.products=products
 
         return cart
+        
     } catch (error) {
         console.error(error)
     }
