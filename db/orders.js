@@ -27,8 +27,6 @@ async function deleteDetails(detailId, userId) {
        WHERE "id"=${detailId} and "userId"=${userId}
        RETURNING * ;
 
-       WHERE "productId"=${detailId} and "userId"=${userId};
-
        `)
        console.log('deleted')
     } catch (error) {
