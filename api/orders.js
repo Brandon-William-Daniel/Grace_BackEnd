@@ -88,25 +88,28 @@ ordersRouter.post('/orderdetails/:productId', requireUser, async (req, res, next
 
 ordersRouter.patch('/update/:detailId', requireUser, async (req, res, next) => {
     const detailId = req.params.detailId;
+    console.log(detailId)
     const {quantity} = req.body
-    const detail = await getDetailById(detailId)
-    const userId = detail.userId;
+    // console.log(req.user.id)
+    const userId = req.user.id
+    const detail = await getDetailById(detailId, userId)
+    console.log(detail)
     
-    const pid = await getProductById(detail.productId)
-    
+    const pid = await getProductById(detailId)
+    // console.log(pid)
     const price = pid.price * quantity    
       console.log('price', price)
     try {
         if(userId == req.user.id){
-        const updatedReview = await updateDetails(detailId, userId, {quantity}, price)
+        const updatedQuantity = await updateDetails(detailId, userId, {quantity}, price)
         const total = await updateTotal(userId)
         res.send({
-            updatedReview
+            updatedQuantity
         })
         }else{
             next({
                 name: 'Unauthorized User',
-                message: 'You cannone update a review that is not yours'
+                message: 'You cant change quantity'
             })
         }
 

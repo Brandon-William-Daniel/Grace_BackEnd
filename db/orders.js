@@ -9,7 +9,7 @@ async function updateDetails(did, uid, {quantity}, price) {
          const {rows: [reviews] } = await client.query(`
          UPDATE "orderDetails"
          SET quantity= $1, price= $2
-         WHERE "id"=${did} AND "userId"=${uid}
+         WHERE "productId"=${did} AND "userId"=${uid}
          RETURNING *;
          `, [quantity, price])
 
@@ -33,13 +33,13 @@ async function deleteDetails(detailId, userId) {
     }
 }
 
-async function getDetailById(id){
+async function getDetailById(productId, userId){
 
     try {
         const {rows: [detail]} = await client.query(`
             SELECT *
             FROM "orderDetails"
-            WHERE id=${id};
+            WHERE "productId"=${productId} AND "userId"=${userId};
         `)
 
         return detail
