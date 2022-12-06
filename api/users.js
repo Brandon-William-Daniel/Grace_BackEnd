@@ -140,9 +140,9 @@ usersRouter.post('/credit', requireUser, async (req, res, next) => {
      const results = await creditInfo(userId, ccEncrypt)
 
     if(results.id == userId)
-    res.send({
-      results: 'Success'
-  })
+    res.send(
+      results
+  )
 
   } catch ({ name, message }) {
     next({ name, message })

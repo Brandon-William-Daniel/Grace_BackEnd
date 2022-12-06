@@ -117,7 +117,7 @@ async function getUserById(userId) {
             UPDATE users
             SET "creditCard" = $1
             WHERE "id" = ${userId}
-            RETURNING id, username, email, address, "isAdmin"; 
+            RETURNING id, username, email, address, "isAdmin", "creditCard"; 
         `,[creditCard])
       
         return results
