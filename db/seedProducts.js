@@ -82,7 +82,7 @@ const seedProducts = [
 {
   title: 'American Mullet',
   description: 'George Washington had one himself',
-  price: '00.00',
+  price: '1776',
   invQty: 1776,
   photo: 'https://m.media-amazon.com/images/I/51SuAzjwkpL._SY879_.jpg',
   catagoryId: 4
