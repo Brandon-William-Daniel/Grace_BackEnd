@@ -19,11 +19,7 @@ const bcrypt  = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const crypto = require ("crypto");
 
-const algorithm = "aes-256-cbc";
-const initVector = crypto.randomBytes(16);
-const Securitykey = crypto.randomBytes(32);
-const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
-const decipher = crypto.createDecipheriv(algorithm, Securitykey, initVector);
+
 
 
 // POST /api/users/register
@@ -134,15 +130,27 @@ usersRouter.post('/credit', requireUser, async (req, res, next) => {
       message: "Credit Card information is less than 16 digits"})
  
   else { try {
+    //encryption
+    const algorithm = "aes-256-cbc";
+    const initVector = crypto.randomBytes(16);
+    const Securitykey = crypto.randomBytes(32);
+    const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
+    const decipher = crypto.createDecipheriv(algorithm, Securitykey, initVector);
     let ccEncrypt = cipher.update(creditCard, "utf-8", "hex");
     ccEncrypt += cipher.final("hex");
 
+    //decryption if needed
+    // let decryptedData = decipher.update(ccEncrypt, "hex", "utf-8");
+    // decryptedData += decipher.final("utf8");
+    // console.log("Decrypted message: " + decryptedData)
      const results = await creditInfo(userId, ccEncrypt)
 
-    if(results.id == userId)
-    res.send(
-      results
-  )
+    if(results.id != userId)
+    res.send({
+      message:'Cannot complete at this time'
+    })
+  res.send(
+    results)
 
   } catch ({ name, message }) {
     next({ name, message })
