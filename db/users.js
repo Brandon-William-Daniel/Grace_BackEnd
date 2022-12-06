@@ -109,11 +109,29 @@ async function getUserById(userId) {
     }
   }
 
+  async function creditInfo(userId, creditCard) {
+    
+
+    try{
+        const {rows: [results]} = await client.query(`
+            UPDATE users
+            SET "creditCard" = $1
+            WHERE "id" = ${userId}
+            RETURNING id, username, email, address, "isAdmin"; 
+        `,[creditCard])
+      
+        return results
+      }catch(error){
+        console.log(error)
+      }
+  }
+
 module.exports = {
     createUser,
     getAllUsers,
     getUserById,
     getUserByUsername,
-    getOrderLineByUserId
+    getOrderLineByUserId,
+    creditInfo
 
   }
