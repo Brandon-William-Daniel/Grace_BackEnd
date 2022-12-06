@@ -24,7 +24,7 @@ async function deleteDetails(detailId, userId) {
     try {
        const results = await client.query(`
        DELETE FROM "orderDetails"
-       WHERE "productId"=${detailId} and "userId"=${userId}
+       WHERE "productId"=${detailId} and "userId"=${userId};
        RETURNING * ;
        `)
        console.log('deleted')
@@ -91,7 +91,7 @@ async function joinDetailsToCart(userId){
 async function pastCart(userId){
     try {
 
-    const {rows:{cart}} = await client.query(`
+    const {rows:[cart]} = await client.query(`
         SELECT *
         FROM "orderLine"
         WHERE "userId" = $1
@@ -123,12 +123,11 @@ async function getCartById(cartId){
         const {rows: [cart]} = await client.query(`
             SELECT *
             FROM "orderLine"
-            WHERE "userId"=${cartId} AND current = true;
+            WHERE "cartId"=${cartId} AND current = true;
         `)
 
         return cart
     } catch (error) {
-        console.log(error)
         console.error(error)
     }
 }

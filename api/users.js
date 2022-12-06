@@ -10,12 +10,21 @@ const {
     getUserByUsername, 
     createUser, 
     getAllUsers,
-    getUserById 
+    getUserById,
+    creditInfo 
      } = require('../db/users');
 const {requireUser} = require('./utils');
 
 const bcrypt  = require("bcrypt");
 const jwt = require('jsonwebtoken');
+const crypto = require ("crypto");
+
+const algorithm = "aes-256-cbc";
+const initVector = crypto.randomBytes(16);
+const Securitykey = crypto.randomBytes(32);
+const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
+const decipher = crypto.createDecipheriv(algorithm, Securitykey, initVector);
+
 
 // POST /api/users/register
 
@@ -108,20 +117,45 @@ usersRouter.get('/me', requireUser, async (req, res, next) => {
 
 );
 
-// // Get /api/users/:username/orders
+//POST /api/users/credit
 
-// usersRouter.get('/:username/orders', requireUser, async (req, res, next) => {
-//     const {username} = req.params.username;
-//     console.log(username)
-//     try {
-//     const user = await getUserByUsername(username)
-//     console.log('/me', user)
-//    res.send(user)
-//     } catch ({ name, message }) {
-//       next({ name, message })
-//     } 
-//     }
+usersRouter.post('/credit', requireUser, async (req, res, next) => {
+  const creditCard = req.body.creditCard
+  const userId = req.user.id
 
-// )
+  if(creditCard.length > 16)
+    res.send({
+      name: "TooLong",
+      message: 'Credit Card information is more than 16 digits'})
+  
+  else if(creditCard.length < 16)
+    res.send({
+      name: "TooShort",
+      message: "Credit Card information is less than 16 digits"})
+ 
+  else { try {
+    let ccEncrypt = cipher.update(creditCard, "utf-8", "hex");
+    ccEncrypt += cipher.final("hex");
+
+     const results = await creditInfo(userId, ccEncrypt)
+
+    if(results.id == userId)
+    res.send({
+      results: 'Success'
+  })
+
+  } catch ({ name, message }) {
+    next({ name, message })
+  } }
+}
+);
+
 
 module.exports = usersRouter;
+
+
+// let decryptedData = decipher.update(ccEncrypt, "hex", "utf-8");
+
+// decryptedData += decipher.final("utf8");
+
+// console.log("Decrypted message: " + decryptedData);
