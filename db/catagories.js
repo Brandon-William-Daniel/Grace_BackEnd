@@ -14,12 +14,12 @@ async function getAllCatagories(){
 
 async function createCatagory({catName}){
     try {
-        const result = await client.query(`
+        const {rows: [cat]} = await client.query(`
             INSERT INTO catagory ("catName")
             VALUES ($1)
             RETURNING *
         `, [catName])
-        return result
+        return cat
     } catch (error) {
         console.error(error.detail)
     }
