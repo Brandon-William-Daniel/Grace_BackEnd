@@ -19,7 +19,11 @@ const {requireUser, adminUser} = require('./utils');
 const bcrypt  = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const crypto = require ("crypto");
-
+const algorithm = "aes-256-cbc";
+    const initVector = crypto.randomBytes(16);
+    const Securitykey = crypto.randomBytes(32);
+    
+    
 
 
 
@@ -104,7 +108,18 @@ usersRouter.get('/me', requireUser, async (req, res, next) => {
     const userId = req.user.id
     try {
     const user = await getUserById(userId)
-   
+   console.log(user)
+   const decipher = crypto.createDecipheriv(algorithm, Securitykey, initVector);
+   const ccInfo = user.creditCard
+let encryptedCreditCard = decipher.update(ccInfo, "hex", "utf-8");
+
+    encryptedCreditCard += decipher.final("utf-8");
+
+  
+
+  user.creditCard = encryptedCreditCard.slice(-4)
+    
+console.log('decrypted user', user)
    res.send(user)
 
     } catch ({ name, message }) {
@@ -132,12 +147,11 @@ usersRouter.post('/credit', requireUser, async (req, res, next) => {
  
   else { try {
     //encryption
-    const algorithm = "aes-256-cbc";
-    const initVector = crypto.randomBytes(16);
-    const Securitykey = crypto.randomBytes(32);
+    
+    
     const cipher = crypto.createCipheriv(algorithm, Securitykey, initVector);
-    const decipher = crypto.createDecipheriv(algorithm, Securitykey, initVector);
     let ccEncrypt = cipher.update(creditCard, "utf-8", "hex");
+    
     ccEncrypt += cipher.final("hex");
 
     // // decryption if needed
