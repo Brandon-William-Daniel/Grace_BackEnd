@@ -108,16 +108,27 @@ async function getUserById(userId) {
   }
 
   async function creditInfo(userId, creditCard) {
-    
-
     try{
         const {rows: [results]} = await client.query(`
             UPDATE users
             SET "creditCard" = $1
             WHERE "id" = ${userId}
             RETURNING id, username, email, address, "isAdmin", "creditCard"; 
-        `,[creditCard])
-      
+        `,[creditCard]) 
+        return results
+      }catch(error){
+        console.log(error)
+      }
+  }
+
+  async function makeAdmin(userId, boolean) {
+    try{
+        const {rows: [results]} = await client.query(`
+            UPDATE users
+            SET "isAdmin" = $1
+            WHERE "id" = ${userId}
+            RETURNING id, username, "isAdmin"; 
+        `,[boolean]) 
         return results
       }catch(error){
         console.log(error)
@@ -132,6 +143,7 @@ module.exports = {
     getUserById,
     getUserByUsername,
     getOrderLineByUserId,
-    creditInfo
+    creditInfo,
+    makeAdmin
 
   }

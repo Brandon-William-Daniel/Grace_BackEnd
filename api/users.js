@@ -11,7 +11,8 @@ const {
     createUser, 
     getAllUsers,
     getUserById,
-    creditInfo 
+    creditInfo,
+    makeAdmin 
      } = require('../db/users');
 const {requireUser, adminUser} = require('./utils');
 
@@ -174,6 +175,23 @@ usersRouter.get('/admin', adminUser, async (req, res, next) => {
 
 );
 
+//PATCH /api/users/isadmin/:userId
+
+usersRouter.patch('/isadmin/:userId', adminUser, async (req, res, next) => {
+  const userId = req.params.userId
+  const boolean = req.body. boolean
+  
+  try {
+  const user = await makeAdmin(userId, boolean)
+ 
+ res.send(user)
+
+  } catch ({ name, message }) {
+    next({ name, message })
+  } 
+  }
+
+);
 
 module.exports = usersRouter;
 
