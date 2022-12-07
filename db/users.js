@@ -34,7 +34,7 @@ async function createUser( {username, password, email, address, isAdmin}) {
 async function getUserById(userId) {
     try {
       const { rows: [user] } = await client.query(`
-        SELECT id, username, email, address, "isAdmin"
+        SELECT id, username, email, address, "isAdmin", "creditCard"
         FROM users
         WHERE id=$1
       `, [userId]);
