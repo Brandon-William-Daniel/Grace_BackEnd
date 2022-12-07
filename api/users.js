@@ -1,8 +1,3 @@
-// Users --William
-//         POST -- /register Create New User
-//         POST -- /login Login User
-//         GET -- /me Verified the user. Getting everything for the logged in user
-//         GET -- /:username/orders Pull everything for this user
 
 const express = require('express');
 const usersRouter = express.Router();
@@ -20,8 +15,8 @@ const bcrypt  = require("bcrypt");
 const jwt = require('jsonwebtoken');
 const crypto = require ("crypto");
 const algorithm = "aes-256-cbc";
-    const initVector = crypto.randomBytes(16);
-    const Securitykey = crypto.randomBytes(32);
+const initVector = crypto.randomBytes(16);
+const Securitykey = crypto.randomBytes(32);
     
     
 
@@ -48,7 +43,6 @@ usersRouter.post('/register', async (req, res, next) => {
         address
       });
       
-
       const token = jwt.sign({id: user.id, 
         username: username 
       }, process.env.JWT_SECRET, {
@@ -108,17 +102,17 @@ usersRouter.get('/me', requireUser, async (req, res, next) => {
     const userId = req.user.id
     try {
     const user = await getUserById(userId)
-   console.log(user)
-   const decipher = crypto.createDecipheriv(algorithm, Securitykey, initVector);
-   const ccInfo = user.creditCard
-let encryptedCreditCard = decipher.update(ccInfo, "hex", "utf-8");
-
-    encryptedCreditCard += decipher.final("utf-8");
-
   
+   if(user.creditCard){
+    console.log('here')
+    const decipher = crypto.createDecipheriv(algorithm, Securitykey, initVector);
+   const ccInfo = user.creditCard
+    
+  let encryptedCreditCard = decipher.update(ccInfo, "hex", "utf-8");
+  encryptedCreditCard += decipher.final("utf-8");
 
   user.creditCard = encryptedCreditCard.slice(-4)
-    
+    }
 console.log('decrypted user', user)
    res.send(user)
 
@@ -154,10 +148,6 @@ usersRouter.post('/credit', requireUser, async (req, res, next) => {
     
     ccEncrypt += cipher.final("hex");
 
-    // // decryption if needed
-    // let decryptedData = decipher.update(ccEncrypt, "hex", "utf-8");
-    // decryptedData += decipher.final("utf8");
-    // console.log("Decrypted message: " + decryptedData)
      const results = await creditInfo(userId, ccEncrypt)
 
     if(results.id != userId)
