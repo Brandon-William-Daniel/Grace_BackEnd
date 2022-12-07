@@ -38,12 +38,10 @@ async function getUserById(userId) {
         FROM users
         WHERE id=$1
       `, [userId]);
-     //currently returning password
+
       if (!user) {
         return null
       }
-  
-      // user.routines = await getAllRoutinesByUser(user.username);
   
       return user;
     } catch (error) {
@@ -56,7 +54,7 @@ async function getUserById(userId) {
     try {
       //select username from user table
       const {rows} = await client.query(`
-      SELECT id, username, email, "isAdmin"
+      SELECT id, username, email, "isAdmin", address
       FROM users
       `);
     //   console.log(rows)
@@ -125,6 +123,8 @@ async function getUserById(userId) {
         console.log(error)
       }
   }
+
+  
 
 module.exports = {
     createUser,

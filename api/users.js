@@ -13,7 +13,7 @@ const {
     getUserById,
     creditInfo 
      } = require('../db/users');
-const {requireUser} = require('./utils');
+const {requireUser, adminUser} = require('./utils');
 
 const bcrypt  = require("bcrypt");
 const jwt = require('jsonwebtoken');
@@ -139,7 +139,7 @@ usersRouter.post('/credit', requireUser, async (req, res, next) => {
     let ccEncrypt = cipher.update(creditCard, "utf-8", "hex");
     ccEncrypt += cipher.final("hex");
 
-    //decryption if needed
+    // // decryption if needed
     // let decryptedData = decipher.update(ccEncrypt, "hex", "utf-8");
     // decryptedData += decipher.final("utf8");
     // console.log("Decrypted message: " + decryptedData)
@@ -156,6 +156,22 @@ usersRouter.post('/credit', requireUser, async (req, res, next) => {
     next({ name, message })
   } }
 }
+);
+
+// GET /api/users/admin
+
+usersRouter.get('/admin', adminUser, async (req, res, next) => {
+  const userId = req.user.id
+  try {
+  const users = await getAllUsers(userId)
+ 
+ res.send(users)
+
+  } catch ({ name, message }) {
+    next({ name, message })
+  } 
+  }
+
 );
 
 
