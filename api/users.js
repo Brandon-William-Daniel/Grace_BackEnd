@@ -179,7 +179,7 @@ usersRouter.get('/admin', adminUser, async (req, res, next) => {
 
 usersRouter.patch('/isadmin/:userId', adminUser, async (req, res, next) => {
   const userId = req.params.userId
-  const boolean = req.body. boolean
+  const boolean = req.body.boolean
   
   try {
   const user = await makeAdmin(userId, boolean)

@@ -58,7 +58,7 @@ ordersRouter.post('/orderdetails/:productId', requireUser, async (req, res, next
     try {
       productData.productId = productId
     //   console.log(productId)
-      const cartId = await getCartById(userId)
+      const cartId = await getCartByUserId(userId)
     //   console.log(userId)
       console.log(cartId)
       productData.cartId = cartId.cartId
