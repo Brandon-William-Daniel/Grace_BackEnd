@@ -34,7 +34,7 @@ ordersRouter.get('/viewcart', requireUser, async (req, res, next) => {
 //GET /api/orders/pastcart
 
 ordersRouter.get('/pastcart', requireUser, async (req, res, next) => {
-    const userId = 1 //req.user.id
+    const userId = req.user.id
     
     try {
         const cart = await pastCart(userId);

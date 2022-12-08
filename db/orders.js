@@ -91,7 +91,7 @@ async function joinDetailsToCart(userId){
 async function pastCart(userId){
     try {
 
-    const {rows:[cart]} = await client.query(`
+    const {rows: [cart]} = await client.query(`
         SELECT *
         FROM "orderLine"
         WHERE "userId" = $1
